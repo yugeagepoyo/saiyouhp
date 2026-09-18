@@ -1,0 +1,213 @@
+@import "tailwindcss";
+
+/*
+ * ブランドカラー: モノトーン（黒〜白のグレースケール）+ 差し色の原色レッド（確定）。
+ * コンポーネント側は必ずこのトークン経由で色を参照し、直書きの hex は使用しないこと。
+ */
+:root {
+  --color-ink-900: #171717;
+  --color-ink-700: #525252;
+  --color-ink-500: #8a8a8a;
+  --color-ink-300: #d4d4d4;
+  --color-paper-050: #fafafa;
+  --color-paper-100: #f2f2f2;
+  --color-paper-200: #e4e4e4;
+  --color-accent-500: #f3b9b4;
+  --color-accent-600: #d0201f;
+
+  --background: var(--color-paper-050);
+  --foreground: var(--color-ink-900);
+
+  --ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-page-transition: 0.6s;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-ink-900: var(--color-ink-900);
+  --color-ink-700: var(--color-ink-700);
+  --color-ink-500: var(--color-ink-500);
+  --color-ink-300: var(--color-ink-300);
+  --color-paper-050: var(--color-paper-050);
+  --color-paper-100: var(--color-paper-100);
+  --color-paper-200: var(--color-paper-200);
+  --color-accent-500: var(--color-accent-500);
+  --color-accent-600: var(--color-accent-600);
+  --font-sans: var(--font-noto-sans-jp);
+  --font-display: var(--font-archivo);
+  --font-editorial: var(--font-bodoni-moda);
+  --font-serif-jp: var(--font-shippori-mincho);
+  --font-entry: var(--font-poppins);
+  /* NORBDENCEロゴ専用。システムフォントのため next/font 読み込みは不要（画像化もしていない）。 */
+  --font-logo: "Arial Black", "Arial Bold", "Helvetica Neue", Arial, sans-serif;
+  --container-page: 1280px;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+body {
+  position: relative;
+  /* body に overflow-x: hidden を付けると overflow-y が auto に解決されて
+     body自体がスクロールコンテナになり、子孫の position: sticky が効かなくなる。
+     横スクロール防止は html 側だけで行う。 */
+  background:
+    radial-gradient(ellipse 80% 60% at 15% 0%, color-mix(in srgb, var(--color-accent-500) 35%, transparent), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 100% 20%, color-mix(in srgb, var(--color-ink-900) 8%, transparent), transparent 60%),
+    linear-gradient(180deg, var(--color-paper-050), var(--color-paper-100));
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* ページ全体にごく薄いノイズ（粒状感）を重ね、べた塗りの単調さを避ける */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 160px 160px;
+}
+
+/*
+ * ダークセクション用：ベースカラーのグラデーション+ノイズ（べた塗りを避ける）。
+ * position は意図的に指定しない（fixed 等と併用する箇所があり、position:relative を
+ * 混ぜるとカスケードでTailwindのposition指定を上書きしてしまうため）。
+ */
+.section-dark {
+  background:
+    radial-gradient(ellipse 70% 60% at 85% 0%, color-mix(in srgb, var(--color-accent-600) 18%, transparent), transparent 65%),
+    linear-gradient(160deg, #262626 0%, var(--color-ink-900) 55%, #2b2b2b 100%);
+  color: var(--color-paper-050);
+}
+
+/* prefers-reduced-motion のユーザーには、Framer Motion 側の制御に加えて
+   CSSアニメーション（マーキー等）も念のため無効化する */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ============================================================
+   TOP初回ランディング演出
+   文字数・タイル数が多いため、JSではなくCSSアニメーション＋
+   animation-delayで動かす（transform / opacity のみを使用）。
+   ============================================================ */
+
+/* NORBDENCEロゴの1文字ぶんのパス。輪郭が描かれたあと、黒の塗りが遅れて現れる。
+   pathLength="1" を併用しているため、字形の実長に関係なく dasharray/dashoffset を
+   0〜1で扱え、どの文字も同じ時間で描き切れる。 */
+.intro-logo-path {
+  fill: var(--color-ink-900);
+  fill-opacity: 0;
+  stroke: var(--color-ink-900);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+/* 前方（パスの始点）から描く。
+   塗りは全パス共通の遅延で、輪郭が全て描き終わってから始まる。 */
+.intro-logo-path--animated {
+  animation:
+    intro-stroke-draw var(--intro-draw-duration) linear var(--intro-draw-delay) forwards,
+    intro-fill-in var(--intro-fill-duration) cubic-bezier(0.33, 0, 0.4, 1) var(--intro-fill-delay) forwards;
+}
+
+/* 後方（パスの終点）から描く。文字ごとの並び順が見えないよう、
+   パスによって描き始める位置を変えるために使う。 */
+.intro-logo-path--reverse {
+  stroke-dashoffset: -1;
+  animation:
+    intro-stroke-draw-reverse var(--intro-draw-duration) linear var(--intro-draw-delay) forwards,
+    intro-fill-in var(--intro-fill-duration) cubic-bezier(0.33, 0, 0.4, 1) var(--intro-fill-delay) forwards;
+}
+
+/* prefers-reduced-motion 時などの静止表示 */
+.intro-logo-path--static {
+  fill-opacity: 1;
+  stroke-dashoffset: 0;
+}
+
+@keyframes intro-stroke-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes intro-stroke-draw-reverse {
+  from {
+    stroke-dashoffset: -1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes intro-fill-in {
+  from {
+    fill-opacity: 0;
+  }
+  to {
+    fill-opacity: 1;
+  }
+}
+
+/* TOP本編を覆う白幕。 */
+.intro-veil {
+  background-color: #fff;
+}
+
+/* Blur Dissolve：白のopacityを落としながら、背面（TOP本編）にかけた
+   backdrop-blurを同時に解いていく。白 → ぼやけた写真 → 鮮明な写真、と抜ける。 */
+.intro-veil--dissolve {
+  animation: intro-blur-dissolve 1.1s cubic-bezier(0.5, 0, 0.2, 1) forwards;
+}
+
+@keyframes intro-blur-dissolve {
+  0% {
+    opacity: 1;
+    -webkit-backdrop-filter: blur(24px);
+    backdrop-filter: blur(24px);
+  }
+  /* 白のまま少しためてから抜け始める */
+  28% {
+    opacity: 0.88;
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+  }
+  62% {
+    opacity: 0.4;
+    -webkit-backdrop-filter: blur(11px);
+    backdrop-filter: blur(11px);
+  }
+  100% {
+    opacity: 0;
+    -webkit-backdrop-filter: blur(0px);
+    backdrop-filter: blur(0px);
+  }
+}
