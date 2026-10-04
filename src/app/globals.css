@@ -12,6 +12,10 @@
   --color-paper-050: #fafafa;
   --color-paper-100: #f2f2f2;
   --color-paper-200: #e4e4e4;
+  /* 背景のセクション差用。純白からアイボリーまでの紙のような階調。 */
+  --color-paper-000: #ffffff;
+  --color-ivory-050: #faf8f3;
+  --color-ivory-100: #f2efe8;
   --color-accent-500: #f3b9b4;
   --color-accent-600: #d0201f;
 
@@ -32,12 +36,17 @@
   --color-paper-050: var(--color-paper-050);
   --color-paper-100: var(--color-paper-100);
   --color-paper-200: var(--color-paper-200);
+  --color-paper-000: var(--color-paper-000);
+  --color-ivory-050: var(--color-ivory-050);
+  --color-ivory-100: var(--color-ivory-100);
   --color-accent-500: var(--color-accent-500);
   --color-accent-600: var(--color-accent-600);
   --font-sans: var(--font-noto-sans-jp);
   --font-display: var(--font-archivo);
   --font-editorial: var(--font-bodoni-moda);
   --font-serif-jp: var(--font-shippori-mincho);
+  /* 英字見出し（セクション名・ページ名）用。幾何学的サンセリフのLightを想定。 */
+  --font-heading-en: var(--font-poppins);
   --font-entry: var(--font-poppins);
   /* NORBDENCEロゴ専用。システムフォントのため next/font 読み込みは不要（画像化もしていない）。 */
   --font-logo: "Arial Black", "Arial Bold", "Helvetica Neue", Arial, sans-serif;
@@ -53,10 +62,7 @@ body {
   /* body に overflow-x: hidden を付けると overflow-y が auto に解決されて
      body自体がスクロールコンテナになり、子孫の position: sticky が効かなくなる。
      横スクロール防止は html 側だけで行う。 */
-  background:
-    radial-gradient(ellipse 80% 60% at 15% 0%, color-mix(in srgb, var(--color-accent-500) 35%, transparent), transparent 60%),
-    radial-gradient(ellipse 70% 50% at 100% 20%, color-mix(in srgb, var(--color-ink-900) 8%, transparent), transparent 60%),
-    linear-gradient(180deg, var(--color-paper-050), var(--color-paper-100));
+  background-color: var(--color-ivory-050);
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
 }
@@ -68,10 +74,10 @@ body::before {
   inset: 0;
   z-index: 30;
   pointer-events: none;
-  opacity: 0.05;
+  opacity: 0.1;
   mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-  background-size: 160px 160px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 220px 220px;
 }
 
 /*
@@ -80,9 +86,7 @@ body::before {
  * 混ぜるとカスケードでTailwindのposition指定を上書きしてしまうため）。
  */
 .section-dark {
-  background:
-    radial-gradient(ellipse 70% 60% at 85% 0%, color-mix(in srgb, var(--color-accent-600) 18%, transparent), transparent 65%),
-    linear-gradient(160deg, #262626 0%, var(--color-ink-900) 55%, #2b2b2b 100%);
+  background-color: var(--color-ink-900);
   color: var(--color-paper-050);
 }
 
@@ -209,5 +213,41 @@ body::before {
     opacity: 0;
     -webkit-backdrop-filter: blur(0px);
     backdrop-filter: blur(0px);
+  }
+}
+
+/* MISSION / VISION / VALUE を1画面ずつ見せるためのスクロールスナップ。
+   ルートスクローラーに proximity で指定し、scroll-snap-align を持つ要素（MVVの各セクション）
+   の近くでだけ吸着させる。mandatory にすると他セクションの自由なスクロールまで妨げるため使わない。
+   ホイール操作はブラウザ標準のまま（JSでのロックはしない）。
+   スマートフォンでは通常スクロールを優先するため適用しない。 */
+@media (min-width: 768px) {
+  html {
+    scroll-snap-type: y proximity;
+  }
+}
+
+/* 相関図（業界でのポジションや強み）の接続線上を動く矢印。
+   offset-path に接続線と同じパスを与え、offset-rotate: auto で
+   進行方向を向かせる。向きはパスの描画方向（d の始点→終点）で決まる。
+   offset-path 非対応の環境では矢印を出さず、線の終端のマーカーだけで向きを示す。 */
+@keyframes diagram-arrow {
+  from {
+    offset-distance: 0%;
+  }
+  to {
+    offset-distance: 100%;
+  }
+}
+
+.diagram-arrow {
+  display: none;
+}
+
+@supports (offset-path: path("M 0 0 L 1 1")) {
+  .diagram-arrow {
+    display: inline;
+    offset-rotate: auto;
+    animation: diagram-arrow 2.4s linear infinite;
   }
 }

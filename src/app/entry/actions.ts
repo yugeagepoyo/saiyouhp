@@ -8,25 +8,12 @@ import { zodErrorToFieldErrors, type ActionState } from "@/lib/formErrors";
 import { getJobBySlug } from "@/data/jobs";
 import { genderOptions, contactTimeOptions, experienceOptions } from "@/data/entryFormOptions";
 
-const RECRUIT_EMAIL = process.env.RECRUIT_NOTIFICATION_EMAIL || "";
+// 採用担当の受信先。環境変数が未設定でも届くよう既定値を持たせる。
+const RECRUIT_EMAIL = process.env.RECRUIT_NOTIFICATION_EMAIL || "jinji@norbdence.com";
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
-// 危険な実行ファイル等を除いた、一般的な文書・画像形式のみ許可する（許可リスト方式）。
-const ALLOWED_EXTENSIONS = [
-  ".pdf",
-  ".doc",
-  ".docx",
-  ".xls",
-  ".xlsx",
-  ".ppt",
-  ".pptx",
-  ".jpg",
-  ".jpeg",
-  ".png",
-  ".gif",
-  ".webp",
-  ".txt",
-  ".rtf",
-];
+// 添付はPDFのみ許可する（許可リスト方式）。拡張子とMIMEタイプの両方を見る。
+const ALLOWED_EXTENSION = ".pdf";
+const ALLOWED_MIME_TYPE = "application/pdf";
 
 const genderValues = genderOptions.map((o) => o.value) as [string, ...string[]];
 const experienceValues = experienceOptions.map((o) => o.value) as [string, ...string[]];
@@ -58,8 +45,10 @@ const entrySchema = z
 function validateOptionalFile(file: File | null): string | null {
   if (!file || file.size === 0) return null;
   if (file.size > MAX_FILE_SIZE) return "ファイルサイズは10MB以下にしてください";
-  const hasAllowedExtension = ALLOWED_EXTENSIONS.some((ext) => file.name.toLowerCase().endsWith(ext));
-  if (!hasAllowedExtension) return "対応していないファイル形式です（PDF・Word・Excel・画像など一般的な形式をご利用ください）";
+  const hasAllowedExtension = file.name.toLowerCase().endsWith(ALLOWED_EXTENSION);
+  // type は空文字で送られてくる場合があるため、その場合は拡張子のみで判定する。
+  const hasAllowedMimeType = file.type === "" || file.type === ALLOWED_MIME_TYPE;
+  if (!hasAllowedExtension || !hasAllowedMimeType) return "添付できるのはPDFファイルのみです";
   return null;
 }
 

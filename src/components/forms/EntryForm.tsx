@@ -14,7 +14,8 @@ import {
 } from "@/data/entryFormOptions";
 import type { Job } from "@/data/jobs";
 
-const ACCEPTED_FILE_TYPES = ".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.gif,.webp,.txt,.rtf";
+// 添付はPDFのみ。サーバー側（src/app/entry/actions.ts）でも同じ条件で検証している。
+const ACCEPTED_FILE_TYPES = "application/pdf,.pdf";
 
 function FieldError({ messages }: { messages?: string[] }) {
   if (!messages || messages.length === 0) return null;
@@ -71,7 +72,7 @@ export function EntryForm({ jobs, initialJobSlug }: { jobs: Job[]; initialJobSlu
           {experienceOptions.map((o) => (
             <label
               key={o.value}
-              className="flex cursor-pointer items-center gap-2 rounded-lg border border-[var(--color-paper-200)] px-3 py-2 text-sm text-[var(--color-ink-900)]"
+              className="flex cursor-pointer items-center gap-2 py-2 text-sm text-[var(--color-ink-900)]"
             >
               <input
                 type="radio"
@@ -172,7 +173,7 @@ export function EntryForm({ jobs, initialJobSlug }: { jobs: Job[]; initialJobSlu
           {contactTimeOptions.map((o) => (
             <label
               key={o.value}
-              className="flex cursor-pointer items-center gap-2 rounded-lg border border-[var(--color-paper-200)] px-3 py-2 text-sm text-[var(--color-ink-900)]"
+              className="flex cursor-pointer items-center gap-2 py-2 text-sm text-[var(--color-ink-900)]"
             >
               <input
                 type="checkbox"
@@ -188,8 +189,8 @@ export function EntryForm({ jobs, initialJobSlug }: { jobs: Job[]; initialJobSlu
         </div>
       </div>
 
-      <div className="space-y-4 rounded-xl border border-[var(--color-paper-200)] p-4">
-        <p className={labelClass}>履歴書・職務経歴書（任意）</p>
+      <div className="space-y-4">
+        <p className={labelClass}>履歴書・職務経歴書（任意／PDFのみ）</p>
         <div>
           <label htmlFor="resumeFile" className={labelClass}>
             履歴書の添付
@@ -201,7 +202,7 @@ export function EntryForm({ jobs, initialJobSlug }: { jobs: Job[]; initialJobSlu
             accept={ACCEPTED_FILE_TYPES}
             className={inputClass}
           />
-          <p className="mt-1 text-xs text-[var(--color-ink-500)]">PDF・Word・Excel・画像など、10MBまで</p>
+          <p className="mt-1 text-xs text-[var(--color-ink-500)]">PDFのみ、10MBまで</p>
           <FieldError messages={state.errors?.resumeFile} />
         </div>
 
@@ -216,7 +217,7 @@ export function EntryForm({ jobs, initialJobSlug }: { jobs: Job[]; initialJobSlu
             accept={ACCEPTED_FILE_TYPES}
             className={inputClass}
           />
-          <p className="mt-1 text-xs text-[var(--color-ink-500)]">PDF・Word・Excel・画像など、10MBまで</p>
+          <p className="mt-1 text-xs text-[var(--color-ink-500)]">PDFのみ、10MBまで</p>
           <FieldError messages={state.errors?.careerFile} />
         </div>
       </div>

@@ -5,6 +5,7 @@ import { RevealImage } from "@/components/ui/RevealImage";
 import { Button } from "@/components/ui/Button";
 import { people } from "@/data/people";
 import { getDepartmentById } from "@/data/departments";
+import { SectionDecor } from "@/components/ui/SectionDecor";
 
 const PICKUP_COUNT = 3;
 
@@ -14,15 +15,17 @@ export function PeoplePickup() {
   const pickups = people.filter((person) => !person.isLeadership).slice(0, PICKUP_COUNT);
 
   return (
-    <section className="bg-[var(--color-paper-100)] py-20 md:py-28">
-      <Container>
+    <section className="relative overflow-hidden bg-[var(--color-paper-000)] py-24 md:py-40">
+      <SectionDecor variant="people" />
+      <Container className="relative">
         <SectionHeading
           eyebrow="People"
           title="人を知る"
           description="入社のきっかけ、現在の仕事、これからの目標。ノーブデンスで働く社員たちのリアルな声を紹介します。"
         />
 
-        <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-3">
+        {/* 画像の左右端を WORK セクションの1枚画像（max-w-4xl）と揃える */}
+        <div className="mx-auto mt-12 grid max-w-4xl grid-cols-1 gap-6 sm:grid-cols-3">
           {pickups.map((person) => (
             <Link key={person.slug} href={`/people/${person.slug}`} className="group block">
               <RevealImage

@@ -8,6 +8,7 @@ import { RevealImage } from "@/components/ui/RevealImage";
 import { Button } from "@/components/ui/Button";
 import type { JobGroup } from "@/data/jobs";
 import { EASE_STANDARD } from "@/lib/motion";
+import { SectionDecor } from "@/components/ui/SectionDecor";
 
 const groups: { id: JobGroup; label: string }[] = [
   { id: "general", label: "総合職" },
@@ -20,12 +21,13 @@ export function WorkPickup() {
   const label = groups.find((g) => g.id === group)?.label ?? "";
 
   return (
-    <section className="py-20 md:py-28">
-      <Container>
+    <section className="relative overflow-hidden bg-[var(--color-paper-050)] py-24 md:py-40">
+      <SectionDecor variant="work" />
+      <Container className="relative">
         <SectionHeading
           eyebrow="Work"
           title="仕事を知る"
-          description="総合職と事務職、それぞれの働き方をご紹介します。"
+          description="それぞれの職種で、どのような仕事に携わり、どのように活躍しているのかをご紹介します。"
         />
 
         <div role="tablist" className="mt-10 flex gap-2 border-b border-[var(--color-paper-200)]">

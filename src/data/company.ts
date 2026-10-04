@@ -9,7 +9,7 @@
  * 実数が確定した項目から順に "confirmed" へ変更・実値を入力すること。
  */
 
-export type StatDisplayType = "counter" | "ring" | "flip" | "bar";
+export type StatDisplayType = "counter" | "pie" | "flip" | "bar";
 
 export interface CompanyStat {
   id: string;
@@ -25,8 +25,9 @@ export interface CompanyStat {
   placeholderText?: string;
   note?: string;
   /**
-   * 項目イラスト（public/images/numbers/ 配下）。
-   * 画像に項目名の文字が含まれているため、指定した場合はテキストのラベルを置き換える。
+   * 項目イラスト（public/images/numbers/illust/ 配下）。
+   * 元画像には項目名の文字が入っているため、イラスト部分だけを切り出した illust/ を参照する
+   * （項目名はカード上部にテキストとして別途表示する）。
    * 1項目1ファイルで独立しているため、差し替えは同名PNGを上書きするだけでよい。
    */
   icon?: string;
@@ -42,27 +43,27 @@ export const companyStats: CompanyStat[] = [
     display: "counter",
     value: 29.07,
     unit: "歳",
-    icon: "/images/numbers/average-age.png",
+    icon: "/images/numbers/illust/average-age.png",
   },
   {
     id: "parental-leave-return-rate",
     label: "産休・育休 復帰後定着率",
     status: "confirmed",
-    display: "ring",
+    display: "pie",
     value: 100,
     unit: "%",
     note: "2025年実績",
-    icon: "/images/numbers/parental-return.png",
+    icon: "/images/numbers/illust/parental-return.png",
   },
   {
     id: "male-parental-leave-rate",
     label: "男性育休取得率",
     status: "confirmed",
-    display: "ring",
+    display: "pie",
     value: 100,
     unit: "%",
     note: "2025年実績",
-    icon: "/images/numbers/male-parental-leave.png",
+    icon: "/images/numbers/illust/male-parental-leave.png",
   },
   {
     id: "paid-leave-days",
@@ -73,14 +74,15 @@ export const companyStats: CompanyStat[] = [
     precision: 1,
     unit: "日",
     note: "2025年実績",
-    icon: "/images/numbers/paid-leave.png",
+    icon: "/images/numbers/illust/paid-leave.png",
   },
   {
     id: "retention-rate",
     label: "定着率",
     status: "confirmed",
     display: "bar",
-    value: 94,
+    value: 91.5,
+    precision: 1,
     unit: "%",
     note: "過去5年間の社員定着率",
   },
@@ -92,7 +94,7 @@ export const companyStats: CompanyStat[] = [
     value: 35,
     unit: "倍",
     note: "5年間で売上1億円→35億円に成長",
-    icon: "/images/numbers/sales-growth.png",
+    icon: "/images/numbers/illust/sales-growth.png",
   },
 ];
 

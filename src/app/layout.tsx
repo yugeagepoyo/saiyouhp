@@ -20,10 +20,11 @@ const notoSansJp = Noto_Sans_JP({
 });
 
 // ナビゲーション・小見出し・数字用：細身で直線的なモダン・グロテスク。
+// 「数字で見るノーブデンス」の数値を太く大きく見せるため、SemiBold(600)も読み込む。
 const archivo = Archivo({
   variable: "--font-archivo",
   subsets: ["latin"],
-  weight: ["300", "400"],
+  weight: ["300", "400", "600"],
   display: "swap",
 });
 
@@ -42,11 +43,12 @@ const shipporiMincho = Shippori_Mincho({
   display: "swap",
 });
 
-// 右下固定ENTRYボタンの英字専用フォント。縦長に見えないよう、幅広で幾何学的なsansを採用。
+// 英字見出し（セクション名・ページ名）と右下固定ENTRYボタン用の幾何学的サンセリフ。
+// 見出しでは Light(300) を細めの字面で使うため、300も読み込む。
 const poppins = Poppins({
   variable: "--font-poppins",
   subsets: ["latin"],
-  weight: "400",
+  weight: ["300", "400"],
   display: "swap",
 });
 

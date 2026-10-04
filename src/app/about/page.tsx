@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -8,6 +7,7 @@ import { CenterCarousel } from "@/components/ui/CenterCarousel";
 import { VerticalStats } from "@/components/about/VerticalStats";
 import { FiveSensesFace } from "@/components/about/FiveSensesFace";
 import { CommunityStory } from "@/components/about/CommunityStory";
+import { PositionNetwork } from "@/components/about/PositionNetwork";
 import { BenefitsGrid } from "@/components/about/BenefitsGrid";
 import { WorkDiagram } from "@/components/work/WorkDiagram";
 import { companyStats } from "@/data/company";
@@ -19,9 +19,6 @@ export const metadata: Metadata = {
   description:
     "事業内容、数字で見るノーブデンス、部署構成、職場環境、成長支援、福利厚生など、株式会社ノーブデンスについてご紹介します。",
 };
-
-/** 業界ポジション図（共有資料の画像）。差し替えは同名PNGの上書きでよい。 */
-const POSITION_DIAGRAM_SRC = "/images/position-diagram.png";
 
 const businessLines = [
   { title: "不動産事業", text: "物件の売買・仲介を通じて、お客様に最適な選択肢をご提案します。" },
@@ -73,18 +70,8 @@ export default function AboutPage() {
             不動産・建築・解体産廃という複数事業を自社で連携させ、一貫したサービスを提供できる体制
           </p>
 
-          {/* 共有資料「業界でのポジションや強み」の図をそのまま掲載する。
-              図は文字が切れないよう、トリミングせず全体を表示する。 */}
-          <figure className="mt-12 overflow-hidden rounded-2xl border border-[var(--color-paper-200)] bg-[var(--color-paper-050)]">
-            <Image
-              src={POSITION_DIAGRAM_SRC}
-              alt="業界でのポジションや強み：競合ではなく取引業者・協力会社として、リフォーム会社・不動産会社・大工・商社担当者・解体担当者と双方向に取引する関係図"
-              width={1327}
-              height={742}
-              sizes="(min-width: 1280px) 1200px, 100vw"
-              className="h-auto w-full"
-            />
-          </figure>
+          {/* 共有資料の相関図をインタラクティブ化したもの（静止画は廃止）。 */}
+          <PositionNetwork />
         </Container>
       </section>
 

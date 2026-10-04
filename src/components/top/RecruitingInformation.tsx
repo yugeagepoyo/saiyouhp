@@ -4,6 +4,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
 import { RevealImage } from "@/components/ui/RevealImage";
 import { jobs } from "@/data/jobs";
+import { SectionDecor } from "@/components/ui/SectionDecor";
 
 const PICKUP_COUNT = 4;
 
@@ -16,8 +17,9 @@ export function RecruitingInformation() {
   const pickups = jobs.filter((job) => job.published).slice(0, PICKUP_COUNT);
 
   return (
-    <section className="py-20 md:py-28">
-      <Container>
+    <section className="relative overflow-hidden bg-[var(--color-paper-000)] py-24 md:py-40">
+      <SectionDecor variant="recruit" />
+      <Container className="relative">
         <SectionHeading eyebrow="Recruit" title="採用情報" align="center" />
 
         <div className="mx-auto mt-12 max-w-4xl">

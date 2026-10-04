@@ -36,7 +36,7 @@ export function SectionHeading({
       className={`${align === "center" ? "text-center" : "text-left"} ${className}`}
     >
       {eyebrow && (
-        <p className="mb-3 font-display text-sm tracking-[0.2em] text-[var(--color-accent-600)] uppercase">
+        <p className="mb-3 font-heading-en text-[17px] font-light tracking-[0.2em] text-[var(--color-accent-600)] uppercase">
           {eyebrow}
         </p>
       )}
