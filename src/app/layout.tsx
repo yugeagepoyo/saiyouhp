@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Noto_Sans_JP, Archivo, Bodoni_Moda, Shippori_Mincho, Poppins } from "next/font/google";
+import { Noto_Sans_JP, Archivo, Bodoni_Moda, Shippori_Mincho, Jost } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
@@ -43,12 +43,14 @@ const shipporiMincho = Shippori_Mincho({
   display: "swap",
 });
 
-// 英字見出し（セクション名・ページ名）と右下固定ENTRYボタン用の幾何学的サンセリフ。
-// 見出しでは Light(300) を細めの字面で使うため、300も読み込む。
-const poppins = Poppins({
-  variable: "--font-poppins",
+// 英字見出し（セクション名・ページ名）・右下固定ENTRYボタン・エントリー完了画面の
+// 大きな「THANK YOU」で使う幾何学サンセリフ。Futura系の端正な字面で、
+// 建築・エディトリアルの文脈に合うフォーマルな表情にする。
+// 見出しは Light(300)、ENTRYボタンは Regular(400)、THANK YOU は SemiBold(600)。
+const jost = Jost({
+  variable: "--font-jost",
   subsets: ["latin"],
-  weight: ["300", "400"],
+  weight: ["300", "400", "600"],
   display: "swap",
 });
 
@@ -90,7 +92,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="ja"
       data-scroll-behavior="smooth"
-      className={`${notoSansJp.variable} ${archivo.variable} ${bodoniModa.variable} ${shipporiMincho.variable} ${poppins.variable} h-full antialiased`}
+      className={`${notoSansJp.variable} ${archivo.variable} ${bodoniModa.variable} ${shipporiMincho.variable} ${jost.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         <RouteTransitionOverlay />

@@ -45,9 +45,10 @@
   --font-display: var(--font-archivo);
   --font-editorial: var(--font-bodoni-moda);
   --font-serif-jp: var(--font-shippori-mincho);
-  /* 英字見出し（セクション名・ページ名）用。幾何学的サンセリフのLightを想定。 */
-  --font-heading-en: var(--font-poppins);
-  --font-entry: var(--font-poppins);
+  /* 英字見出し（セクション名・ページ名）・ENTRYボタン用。
+     Futura系の端正な幾何学サンセリフ（Jost）で統一する。 */
+  --font-heading-en: var(--font-jost);
+  --font-entry: var(--font-jost);
   /* NORBDENCEロゴ専用。システムフォントのため next/font 読み込みは不要（画像化もしていない）。 */
   --font-logo: "Arial Black", "Arial Bold", "Helvetica Neue", Arial, sans-serif;
   --container-page: 1280px;

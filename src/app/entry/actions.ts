@@ -15,6 +15,10 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ALLOWED_EXTENSION = ".pdf";
 const ALLOWED_MIME_TYPE = "application/pdf";
 
+// フリガナは全角カタカナのみ（長音符・中点・スペースは許可）。
+const KANA_PATTERN = /^[ァ-ヶー・　 ]+$/;
+const KANA_MESSAGE = "全角カタカナで入力してください";
+
 const genderValues = genderOptions.map((o) => o.value) as [string, ...string[]];
 const experienceValues = experienceOptions.map((o) => o.value) as [string, ...string[]];
 
@@ -24,8 +28,16 @@ const entrySchema = z
     experience: z.enum(experienceValues, { message: "経験有無を選択してください" }),
     lastName: z.string().trim().min(1, "姓を入力してください"),
     firstName: z.string().trim().min(1, "名を入力してください"),
-    lastNameKana: z.string().trim().min(1, "フリガナ（セイ）を入力してください"),
-    firstNameKana: z.string().trim().min(1, "フリガナ（メイ）を入力してください"),
+    lastNameKana: z
+      .string()
+      .trim()
+      .min(1, "フリガナ（セイ）を入力してください")
+      .regex(KANA_PATTERN, KANA_MESSAGE),
+    firstNameKana: z
+      .string()
+      .trim()
+      .min(1, "フリガナ（メイ）を入力してください")
+      .regex(KANA_PATTERN, KANA_MESSAGE),
     birthDate: z.string().trim().min(1, "生年月日を入力してください"),
     gender: z.enum(genderValues, { message: "性別を選択してください" }),
     tel: z.string().trim(),

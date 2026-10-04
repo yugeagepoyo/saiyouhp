@@ -17,6 +17,11 @@ import type { Job } from "@/data/jobs";
 // 添付はPDFのみ。サーバー側（src/app/entry/actions.ts）でも同じ条件で検証している。
 const ACCEPTED_FILE_TYPES = "application/pdf,.pdf";
 
+// フリガナは全角カタカナのみ（長音符・中点・スペースは許可）。サーバー側と同じ条件。
+const KANA_PATTERN = /^[ァ-ヶー・　 ]+$/;
+const KANA_MESSAGE = "全角カタカナで入力してください";
+type KanaField = "lastNameKana" | "firstNameKana";
+
 function FieldError({ messages }: { messages?: string[] }) {
   if (!messages || messages.length === 0) return null;
   return <p className="mt-1 text-xs text-red-600">{messages[0]}</p>;
@@ -25,7 +30,31 @@ function FieldError({ messages }: { messages?: string[] }) {
 export function EntryForm({ jobs, initialJobSlug }: { jobs: Job[]; initialJobSlug?: string }) {
   const [consent, setConsent] = useState(false);
   const [contactTime, setContactTime] = useState<string[]>([]);
+  const [kanaErrors, setKanaErrors] = useState<Partial<Record<KanaField, string>>>({});
   const [state, formAction, isPending] = useActionState(submitEntryForm, initialActionState);
+
+  /**
+   * 入力確定時（blur・IMEの変換確定時）に判定する。
+   * 変換中の「ひらがな」で一瞬エラーが出るのを避けるため、onChange では
+   * すでに出ているエラーを消す方向にだけ再判定する。
+   */
+  function validateKana(field: KanaField, value: string, onlyClear = false) {
+    const trimmed = value.trim();
+    const invalid = trimmed.length > 0 && !KANA_PATTERN.test(trimmed);
+    setKanaErrors((prev) => {
+      if (onlyClear && !prev[field]) return prev;
+      return { ...prev, [field]: invalid ? KANA_MESSAGE : undefined };
+    });
+  }
+
+  function kanaFieldProps(field: KanaField) {
+    return {
+      onBlur: (e: React.FocusEvent<HTMLInputElement>) => validateKana(field, e.target.value),
+      onCompositionEnd: (e: React.CompositionEvent<HTMLInputElement>) =>
+        validateKana(field, e.currentTarget.value),
+      onChange: (e: React.ChangeEvent<HTMLInputElement>) => validateKana(field, e.target.value, true),
+    };
+  }
 
   function toggleContactTime(value: string) {
     setContactTime((prev) => {
@@ -79,7 +108,7 @@ export function EntryForm({ jobs, initialJobSlug }: { jobs: Job[]; initialJobSlu
                 name="experience"
                 value={o.value}
                 required
-                className="h-4 w-4 accent-[var(--color-accent-500)]"
+                className="h-4 w-4 accent-[var(--color-ink-900)]"
               />
               {o.label}
             </label>
@@ -110,15 +139,33 @@ export function EntryForm({ jobs, initialJobSlug }: { jobs: Job[]; initialJobSlu
           <label htmlFor="lastNameKana" className={labelClass}>
             フリガナ（セイ）{requiredMark}
           </label>
-          <input id="lastNameKana" name="lastNameKana" type="text" required className={inputClass} />
-          <FieldError messages={state.errors?.lastNameKana} />
+          <input
+            id="lastNameKana"
+            name="lastNameKana"
+            type="text"
+            required
+            className={inputClass}
+            {...kanaFieldProps("lastNameKana")}
+          />
+          <FieldError
+            messages={kanaErrors.lastNameKana ? [kanaErrors.lastNameKana] : state.errors?.lastNameKana}
+          />
         </div>
         <div>
           <label htmlFor="firstNameKana" className={labelClass}>
             フリガナ（メイ）{requiredMark}
           </label>
-          <input id="firstNameKana" name="firstNameKana" type="text" required className={inputClass} />
-          <FieldError messages={state.errors?.firstNameKana} />
+          <input
+            id="firstNameKana"
+            name="firstNameKana"
+            type="text"
+            required
+            className={inputClass}
+            {...kanaFieldProps("firstNameKana")}
+          />
+          <FieldError
+            messages={kanaErrors.firstNameKana ? [kanaErrors.firstNameKana] : state.errors?.firstNameKana}
+          />
         </div>
       </div>
 
@@ -149,12 +196,17 @@ export function EntryForm({ jobs, initialJobSlug }: { jobs: Job[]; initialJobSlu
       </div>
 
       <div>
+        <p className={labelClass}>連絡先{requiredMark}</p>
+        <p className="-mt-1 mb-3 text-xs text-[var(--color-ink-500)]">
+          電話番号・メールアドレスのいずれかは必ずご入力ください。
+        </p>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label htmlFor="tel" className={labelClass}>
               電話番号
+              <span className="ml-2 text-xs font-normal text-[var(--color-ink-500)]">※ハイフン無し</span>
             </label>
-            <input id="tel" name="tel" type="tel" className={inputClass} />
+            <input id="tel" name="tel" type="tel" inputMode="numeric" className={inputClass} />
           </div>
           <div>
             <label htmlFor="email" className={labelClass}>
