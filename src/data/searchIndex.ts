@@ -35,10 +35,11 @@ function buildIndex(): SearchEntry[] {
   }
 
   for (const person of people) {
-    // 本文未確定（詳細ページなし）の社員は検索対象にしない。
-    if (person.interviewPending) continue;
+    // 代表・部門長はインタビュー記事を持たないため、検索結果には出さない。
+    if (person.isLeadership) continue;
+    // 社員は全員が詳細ページを持つため、取材前の方も氏名で検索できるようにしている。
     entries.push({
-      title: `${person.name}（${person.role}）`,
+      title: person.role ? `${person.name}（${person.role}）` : person.name,
       description: person.quote,
       url: `/people/${person.slug}`,
       category: "社員インタビュー",

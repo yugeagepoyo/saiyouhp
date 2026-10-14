@@ -22,7 +22,7 @@ export default async function EntryPage(props: PageProps<"/entry">) {
       <PageHeader
         eyebrow="Entry"
         title="エントリー"
-        description="気になる職種が決まっていなくても大丈夫です。まずはお気軽にエントリーください。"
+        description={"気になる職種が決まっていなくても大丈夫です。\nまずはお気軽にエントリーください。"}
       />
       <section className="py-16 md:py-24">
         <Container className="max-w-xl">

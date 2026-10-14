@@ -46,7 +46,8 @@ export function PageHeader({
         </h1>
 
         {description && (
-          <p className="jp-pretty mt-8 max-w-2xl text-sm leading-loose text-[var(--color-ink-700)] md:text-lg">
+          // 改行を含む説明文は、その位置で改行して表示する。
+          <p className="jp-pretty mt-8 max-w-2xl text-sm leading-loose whitespace-pre-line text-[var(--color-ink-700)] md:text-lg">
             {description}
           </p>
         )}

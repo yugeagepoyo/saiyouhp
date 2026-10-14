@@ -52,7 +52,13 @@ export const featuredBenefits: FeaturedBenefit[] = [
       { src: "/images/benefits/booth-2.jpg", objectPosition: "center 30%" },
     ],
   },
-  { id: "ladies", label: "女性専用休憩室", imageLabel: "女性専用休憩室の写真（未着）" },
+  {
+    id: "ladies",
+    label: "女性専用休憩室",
+    imageLabel: "女性専用休憩室の写真",
+    // 縦に長い写真。ソファと窓が収まるよう下寄りで切り抜く。
+    images: [{ src: "/images/benefits/ladies.jpg", objectPosition: "center 65%" }],
+  },
 ];
 
 /**

@@ -14,8 +14,10 @@ export function EntryCta() {
           <br className="md:hidden" />
           ノーブデンスを知ってください。
         </h2>
+        {/* 「。」で改行し、PC・スマートフォンとも2行で見せる。 */}
         <p className="max-w-xl text-sm leading-relaxed text-[var(--color-ink-700)]">
-          気になる職種が決まっていなくても大丈夫です。まずはお気軽にエントリーください。
+          <span className="block">気になる職種が決まっていなくても大丈夫です。</span>
+          <span className="block">まずはお気軽にエントリーください。</span>
         </p>
         <Button href={ENTRY_HREF} variant="primary">
           ENTRY エントリーする

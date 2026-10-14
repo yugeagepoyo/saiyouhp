@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Container } from "@/components/ui/Container";
@@ -24,9 +25,21 @@ export const metadata: Metadata = {
 };
 
 const growthCareerCards = [
-  { title: "早期からの裁量", text: "年齢や社歴に関わらず、成果と成長意欲を評価する文化があります。" },
-  { title: "資格取得支援", text: "業務に関連する資格の取得を、費用面も含めてサポートしています。" },
-  { title: "キャリアの複線化", text: "現場・管理・営業など、本人の適性に応じたキャリアパスを用意しています。" },
+  {
+    title: "早期からの裁量",
+    text: "年齢や社歴に関わらず、成果と成長意欲を評価する文化があります。",
+    imageSrc: "/images/growth/discretion.jpg",
+  },
+  {
+    title: "資格取得支援",
+    text: "業務に関連する資格の取得を、費用面も含めてサポートしています。",
+    imageSrc: "/images/growth/certification.jpg",
+  },
+  {
+    title: "キャリアの複線化",
+    text: "現場・管理・営業など、本人の適性に応じたキャリアパスを用意しています。",
+    imageSrc: "/images/growth/career-path.jpg",
+  },
 ];
 
 const training = [
@@ -110,11 +123,19 @@ export default function AboutPage() {
           <div className="mt-10">
             <CenterCarousel>
               {growthCareerCards.map((c) => (
-                <div
-                  key={c.title}
-                  className="flex aspect-[4/5] flex-col justify-end rounded-3xl border border-[var(--color-paper-200)] bg-[var(--color-paper-050)] p-8 shadow-sm"
-                >
-                  <p className="text-lg font-bold text-[var(--color-ink-900)]">{c.title}</p>
+                <div key={c.title}>
+                  {/* 写真はフルカラー・角丸なし。縦横比は cover で調整する。 */}
+                  <div className="relative aspect-[4/5] w-full overflow-hidden">
+                    <Image
+                      src={c.imageSrc}
+                      alt={c.title}
+                      fill
+                      sizes="(max-width: 640px) 78vw, 380px"
+                      className="object-cover"
+                      draggable={false}
+                    />
+                  </div>
+                  <p className="mt-5 text-lg font-bold text-[var(--color-ink-900)]">{c.title}</p>
                   <p className="mt-3 text-sm leading-relaxed text-[var(--color-ink-700)]">{c.text}</p>
                 </div>
               ))}

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { jobs, getJobBySlug } from "@/data/jobs";
 import { getDepartmentById } from "@/data/departments";
 import { JobRequirementsSections } from "@/components/recruit/JobRequirementsPanel";
-import { getPersonBySlug } from "@/data/people";
+import { people } from "@/data/people";
 import { ENTRY_HREF } from "@/data/nav";
 
 export function generateStaticParams() {
@@ -66,6 +66,10 @@ export default async function JobDetailPage(props: PageProps<"/recruit/[slug]">)
   if (!job) notFound();
 
   const dept = getDepartmentById(job.departmentId);
+  // この職種の部署に社員インタビューがある場合だけ、一覧への導線を出す。
+  const hasDepartmentInterviews = people.some(
+    (p) => !p.isLeadership && p.departmentId === job.departmentId,
+  );
 
   // 勤務条件が未登録の職種は、条件を推測して出さず募集なしとして扱う。
   if (!job.published) {
@@ -139,25 +143,18 @@ export default async function JobDetailPage(props: PageProps<"/recruit/[slug]">)
             </Panel>
           )}
 
-          {job.relatedPeopleSlugs && job.relatedPeopleSlugs.length > 0 && (
+          {hasDepartmentInterviews && (
             <Panel>
               <PanelHeading>関連する社員インタビュー</PanelHeading>
-              <ul className="mt-8 space-y-2 text-center">
-                {job.relatedPeopleSlugs.map((s) => {
-                  const person = getPersonBySlug(s);
-                  if (!person) return null;
-                  return (
-                    <li key={s}>
-                      <Link
-                        href={`/people/${s}`}
-                        className="text-sm text-[var(--color-accent-600)] hover:underline"
-                      >
-                        {person.name}のインタビューを見る →
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
+              {/* 「人を知る」の一覧へ、この職種の部署タブを選んだ状態で遷移する。 */}
+              <p className="mt-8 text-center">
+                <Link
+                  href={`/people?dept=${job.departmentId}#interview`}
+                  className="text-sm text-[var(--color-accent-600)] hover:underline"
+                >
+                  この職種のインタビューを見る →
+                </Link>
+              </p>
             </Panel>
           )}
 
@@ -166,7 +163,7 @@ export default async function JobDetailPage(props: PageProps<"/recruit/[slug]">)
               この職種が気になった方は、お気軽にエントリーください。
             </p>
             <div className="mt-6 text-center">
-              <Button href={`${ENTRY_HREF}?job=${job.slug}`} variant="primary">
+              <Button href={`${ENTRY_HREF}?job=${job.slug}`} variant="cta" size="lg">
                 この職種に応募する
               </Button>
             </div>

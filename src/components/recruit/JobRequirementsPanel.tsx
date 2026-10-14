@@ -124,19 +124,13 @@ export function JobRequirementsSections({ job }: { job: Job }) {
                 onClick={() => setActiveId(v.id)}
                 // 選択中は赤地＋白文字。ページ地色も赤のため、細い白枠と高さで区別し、
                 // 下向きの三角で内容エリアとつながって見えるようにする。
-                className={`relative min-w-[8.5rem] rounded-t-md border border-b-0 px-6 text-sm font-bold transition-colors sm:min-w-[11rem] sm:text-base ${
+                className={`relative rounded-t-md border border-b-0 font-bold transition-colors ${
                   isActive
-                    ? "z-10 border-[var(--color-paper-050)]/85 bg-[var(--color-accent-600)] py-4 text-[var(--color-paper-050)] sm:py-4.5"
-                    : "border-[var(--color-paper-200)] bg-[var(--color-ivory-100)] py-3 text-[var(--color-ink-700)] hover:bg-[var(--color-ivory-050)]"
+                    ? "z-10 min-w-[9.5rem] border-[var(--color-paper-050)] bg-[var(--color-paper-050)] px-7 py-4 text-sm text-[var(--color-ink-900)] sm:min-w-[12rem] sm:py-4.5 sm:text-base"
+                    : "min-w-[7rem] border-[var(--color-paper-050)]/70 bg-transparent px-5 py-2.5 text-xs text-[var(--color-paper-050)] hover:bg-[var(--color-paper-050)]/15 sm:min-w-[9rem] sm:text-sm"
                 }`}
               >
                 {v.label}
-                {isActive && (
-                  <span
-                    aria-hidden
-                    className="absolute -bottom-[7px] left-1/2 h-0 w-0 -translate-x-1/2 border-x-8 border-t-8 border-x-transparent border-t-[var(--color-accent-600)]"
-                  />
-                )}
               </button>
             );
           })}
@@ -244,6 +238,36 @@ export function JobRequirementsSections({ job }: { job: Job }) {
   );
 }
 
+/** 求める人物像の箇条書き。黒い四角に赤いチェックを添え、本文は左揃えにする。 */
+function TraitList({ items, className = "" }: { items: string[]; className?: string }) {
+  return (
+    <ul className={`space-y-4 ${className}`}>
+      {items.map((t) => (
+        <li
+          key={t}
+          className="flex gap-3 text-left text-[15px] leading-relaxed text-[var(--color-ink-900)] md:text-base"
+        >
+          <span
+            aria-hidden
+            className="mt-[0.3rem] flex h-[1.05rem] w-[1.05rem] shrink-0 items-center justify-center bg-[var(--color-ink-900)]"
+          >
+            <svg viewBox="0 0 12 12" className="h-2.5 w-2.5" aria-hidden>
+              <path
+                d="M2 6.3 L4.7 9 L10 3.2"
+                fill="none"
+                stroke="var(--color-accent-600)"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </span>
+          <span>{t}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
 /** 求める人物像。中央揃えで、理念への共感 → 行動特性 → 思考性 の順に見せる。 */
 function IdealCandidate({ job, active }: { job: Job; active?: JobVariant }) {
   const lead = active?.idealCandidateLead ?? job.idealCandidateLead;
@@ -273,17 +297,7 @@ function IdealCandidate({ job, active }: { job: Job; active?: JobVariant }) {
       )}
 
       {plainTraits && plainTraits.length > 0 && (
-        <ul className="mx-auto mt-8 max-w-xl space-y-2.5">
-          {plainTraits.map((t) => (
-            <li
-              key={t}
-              className="flex justify-center gap-2.5 text-sm leading-relaxed text-[var(--color-ink-900)]"
-            >
-              <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--color-accent-600)]" />
-              {t}
-            </li>
-          ))}
-        </ul>
+        <TraitList items={plainTraits} className="mx-auto mt-8 max-w-xl" />
       )}
 
       {successTraits && successTraits.length > 0 && (
@@ -295,17 +309,7 @@ function IdealCandidate({ job, active }: { job: Job; active?: JobVariant }) {
             </p>
             <span className="h-px flex-1 bg-[var(--color-paper-200)]" />
           </div>
-          <ul className="mt-6 space-y-2.5">
-            {successTraits.map((t) => (
-              <li
-                key={t}
-                className="flex justify-center gap-2.5 text-sm leading-relaxed text-[var(--color-ink-900)]"
-              >
-                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--color-accent-600)]" />
-                {t}
-              </li>
-            ))}
-          </ul>
+          <TraitList items={successTraits} className="mt-6" />
         </div>
       )}
 
@@ -321,17 +325,7 @@ function IdealCandidate({ job, active }: { job: Job; active?: JobVariant }) {
                 </p>
                 <span className="h-px flex-1 bg-[var(--color-paper-200)]" />
               </div>
-              <ul className="mt-6 space-y-2.5">
-                {col.items!.map((t) => (
-                  <li
-                    key={t}
-                    className="flex justify-center gap-2.5 text-sm leading-relaxed text-[var(--color-ink-900)]"
-                  >
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--color-accent-600)]" />
-                    {t}
-                  </li>
-                ))}
-              </ul>
+              <TraitList items={col.items!} className="mt-6" />
             </div>
           ))}
         </div>

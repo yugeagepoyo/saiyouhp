@@ -6,7 +6,7 @@
  * 写真も共有済みのものだけを割り当て、未着の方は推測で別の写真を当てず
  * プレースホルダー（label のみ）を表示する。
  *
- * personSlug を持つ方だけ、社員インタビューの詳細ページへリンクする。
+ * 代表・部門長はインタビュー記事を持たないため、カードからのリンクはない。
  */
 
 export interface Leader {
@@ -18,8 +18,6 @@ export interface Leader {
   nameEn: string;
   photoSrc?: string;
   photoLabel: string;
-  /** インタビュー詳細ページがある場合の people スラッグ */
-  personSlug?: string;
 }
 
 /** 代表はセクション最上段に大きく掲載するため、メッセージ本文を持つ。 */
@@ -37,7 +35,6 @@ export const ceo: CeoLeader = {
   nameEn: "Yamazumi Kodai",
   photoSrc: "/images/people/ceo.jpg",
   photoLabel: "代表取締役の写真",
-  personSlug: "ceo",
   // 共有いただいた代表メッセージ。文面は変更しない。
   message: [
     "会社経営は、経営者が一人でできることは限りがあります。従業員一人ひとりの力が合わさることで、大きな力となって社会に貢献していけるものだと考えています。",
@@ -56,7 +53,6 @@ export const departmentLeaders: Leader[] = [
     nameEn: "Abe Masanari",
     photoSrc: "/images/people/sales-1-manager.jpg",
     photoLabel: "第一営業部 部長の写真",
-    personSlug: "sales-manager",
   },
   {
     id: "sales-2",
@@ -65,7 +61,6 @@ export const departmentLeaders: Leader[] = [
     nameEn: "Otsuka Rikiya",
     photoSrc: "/images/people/sales-2-manager.jpg",
     photoLabel: "第二営業部 部長の写真",
-    personSlug: "sales-2-manager",
   },
   {
     id: "construction",
@@ -74,7 +69,6 @@ export const departmentLeaders: Leader[] = [
     nameEn: "Yamazumi Tsuyoshi",
     photoSrc: "/images/people/construction-manager.jpg",
     photoLabel: "建設事業部 部長の写真",
-    personSlug: "construction-manager",
   },
   {
     id: "demolition",
@@ -82,7 +76,6 @@ export const departmentLeaders: Leader[] = [
     name: "石井 克樹",
     nameEn: "Ishii Katsuki",
     photoLabel: "解体施工部 部長の写真（未着）",
-    personSlug: "demolition-manager",
   },
   {
     id: "finance-admin",
@@ -90,6 +83,5 @@ export const departmentLeaders: Leader[] = [
     name: "立石 裕也",
     nameEn: "Tateishi Yuya",
     photoLabel: "財務戦略部・管理部 部長の写真（未着）",
-    personSlug: "finance-admin-manager",
   },
 ];

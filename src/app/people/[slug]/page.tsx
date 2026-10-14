@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/ui/Container";
-import { RevealImage } from "@/components/ui/RevealImage";
+import { InterviewArticle, type InterviewItem } from "@/components/people/InterviewArticle";
 import { people, getPersonBySlug, type Person } from "@/data/people";
 import { getDepartmentById } from "@/data/departments";
+import { getAffiliation } from "@/components/people/InterviewCard";
 
 export function generateStaticParams() {
-  return people.filter((p) => !p.interviewPending).map((p) => ({ slug: p.slug }));
+  return people.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata(props: PageProps<"/people/[slug]">): Promise<Metadata> {
@@ -22,6 +23,7 @@ export async function generateMetadata(props: PageProps<"/people/[slug]">): Prom
 
 // 基本質問。全員がすべてに回答するわけではないため、値が入っている項目だけを表示する。
 const qaFields: { key: keyof Person; question: string }[] = [
+  { key: "beforeAfterText", question: "入社前 → 入社後の変化" },
   { key: "previousCareer", question: "入社前は何をしていましたか？" },
   { key: "howFoundCompany", question: "ノーブデンスを知ったきっかけは？" },
   { key: "reasonForJoining", question: "入社を決めた理由は？" },
@@ -39,83 +41,58 @@ const qaFields: { key: keyof Person; question: string }[] = [
 export default async function PersonDetailPage(props: PageProps<"/people/[slug]">) {
   const { slug } = await props.params;
   const person = getPersonBySlug(slug);
-  // 取材前で本文が未確定の社員は詳細ページを持たない。
-  if (!person || person.interviewPending) notFound();
+  if (!person) notFound();
 
-  const dept = getDepartmentById(person.departmentId);
-  const answeredFields = qaFields.filter((f) => typeof person[f.key] === "string" && person[f.key]);
+
+  const items: InterviewItem[] = qaFields
+    .filter((f) => typeof person[f.key] === "string" && person[f.key])
+    .map((f) => ({ question: f.question, answer: person[f.key] as string }));
+
+  // Before/After形式で回答いただいている方は、同じ見出しで前後を並べて表示する。
+  if (person.beforeAfter) {
+    items.unshift({
+      question: "入社前 → 入社後の変化",
+      answer: `${person.beforeAfter.before}\n\n${person.beforeAfter.after}`,
+    });
+  }
+
 
   return (
     <>
-      <section className="py-16 md:py-24">
-        <Container className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,360px)_1fr]">
-          <div>
-            <RevealImage
-              alt={person.name}
-              label="社員写真（仮）"
-              src={person.photoSrc}
-              aspectClassName="aspect-[3/4]"
-              className="photo-mono"
-            />
-            <div className="mt-6">
-              {person.isSample && (
-                <span className="mb-3 inline-block rounded-full bg-[var(--color-accent-500)]/15 px-2 py-0.5 text-[10px] text-[var(--color-accent-600)]">
-                  サンプル
-                </span>
-              )}
-              <p className="text-xl font-bold text-[var(--color-ink-900)]">{person.name}</p>
-              <p className="text-sm text-[var(--color-ink-500)]">
-                {person.role}（{dept?.name}） / {person.joinYear}
-              </p>
-            </div>
-          </div>
+      <InterviewArticle
+        profile={{
+          name: person.name,
+          nameEn: person.nameEn,
+          kana: person.kana,
+          affiliation: getAffiliation(person),
+          joinYear: person.joinYear,
+          photoSrc: person.photoSrc,
+          photoLabel: "社員写真（仮）",
+          isSample: person.isSample,
+        }}
+        items={items}
+      />
 
-          <div className="space-y-10">
-            {person.beforeAfter && (
-              <div>
-                <p className="font-display mb-3 text-xs tracking-[0.2em] text-[var(--color-accent-600)] uppercase">
-                  入社前 → 入社後の変化
-                </p>
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
-                  <div className="rounded-2xl border border-[var(--color-paper-200)] p-5">
-                    <p className="text-xs font-bold tracking-wide text-[var(--color-ink-500)] uppercase">Before</p>
-                    <p className="mt-2 text-sm leading-relaxed text-[var(--color-ink-700)]">
-                      {person.beforeAfter.before}
-                    </p>
-                  </div>
-                  <span className="hidden text-[var(--color-accent-600)] sm:inline" aria-hidden>
-                    →
-                  </span>
-                  <div className="rounded-2xl bg-[var(--color-ink-900)] p-5">
-                    <p className="text-xs font-bold tracking-wide text-[var(--color-accent-500)] uppercase">After</p>
-                    <p className="mt-2 text-sm leading-relaxed text-[var(--color-paper-050)]">
-                      {person.beforeAfter.after}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
+      {/* 取材がこれからの方。本文は入稿後にデータへ追記すればそのまま表示される。 */}
+      {items.length === 0 && (
+        <section className="pb-20 md:pb-28">
+          <Container className="max-w-[860px]">
+            <p className="text-sm leading-relaxed text-[var(--color-ink-500)]">
+              インタビューは準備中です。公開までしばらくお待ちください。
+            </p>
+          </Container>
+        </section>
+      )}
 
-            {answeredFields.map((f) => (
-              <div key={f.key}>
-                <p className="font-display mb-2 text-xs tracking-[0.2em] text-[var(--color-accent-600)] uppercase">
-                  {f.question}
-                </p>
-                <p className="text-sm leading-relaxed text-[var(--color-ink-700)]">{person[f.key] as string}</p>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </section>
-
-      <section className="section-blend blend-paper-100 py-16 text-center md:py-20">
-        <Container className="max-w-2xl">
-          <p className="font-serif-jp text-xl leading-relaxed font-medium text-[var(--color-ink-900)] md:text-2xl md:leading-relaxed">
-            「{person.quote}」
-          </p>
-        </Container>
-      </section>
-
+      {person.quote && (
+        <section className="section-blend blend-paper-100 py-16 text-center md:py-20">
+          <Container className="max-w-2xl">
+            <p className="font-serif-jp text-xl leading-relaxed font-medium text-[var(--color-ink-900)] md:text-2xl md:leading-relaxed">
+              「{person.quote}」
+            </p>
+          </Container>
+        </section>
+      )}
     </>
   );
 }

@@ -10,15 +10,16 @@ import type { JobGroup } from "@/data/jobs";
 import { EASE_STANDARD } from "@/lib/motion";
 import { SectionDecor } from "@/components/ui/SectionDecor";
 
-const groups: { id: JobGroup; label: string }[] = [
-  { id: "general", label: "総合職" },
-  { id: "office", label: "事務職" },
+const groups: { id: JobGroup; label: string; imageSrc: string }[] = [
+  { id: "general", label: "総合職", imageSrc: "/images/work/general.jpg" },
+  { id: "office", label: "事務職", imageSrc: "/images/work/office.jpg" },
 ];
 
 /** WORK：総合職／事務職のタブでビジュアルを切り替えて見せる。詳細は /work へ。 */
 export function WorkPickup() {
   const [group, setGroup] = useState<JobGroup>("general");
-  const label = groups.find((g) => g.id === group)?.label ?? "";
+  const current = groups.find((g) => g.id === group);
+  const label = current?.label ?? "";
 
   return (
     <section className="section-blend blend-paper-050 relative overflow-hidden py-24 md:py-40">
@@ -66,7 +67,8 @@ export function WorkPickup() {
             >
               <RevealImage
                 alt={`${label}の仕事風景`}
-                label={`${label}の写真（仮）`}
+                label={`${label}の写真`}
+                src={current?.imageSrc}
                 aspectClassName="aspect-[16/9]"
                 revealOnMount
                 parallax

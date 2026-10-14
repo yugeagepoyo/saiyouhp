@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { InterviewCarousel } from "@/components/people/InterviewCarousel";
+import { InterviewGrid } from "@/components/people/InterviewGrid";
 import { CeoMessage } from "@/components/people/CeoMessage";
 import { LeadersMarquee } from "@/components/people/LeadersMarquee";
 import { people } from "@/data/people";
@@ -52,11 +53,13 @@ export default function PeoplePage() {
       <section id="interview" className="scroll-mt-20 py-20 md:py-28">
         <Container>
           <SectionHeading eyebrow="Interview" title="社員インタビュー" />
+          <div className="mt-10 md:mt-12">
+            {/* 募集要項からのタブ指定（?dept=）を読むため Suspense で包む。 */}
+            <Suspense fallback={null}>
+              <InterviewGrid people={employees} />
+            </Suspense>
+          </div>
         </Container>
-        {/* カルーセルは画面端まで流すため Container の外に出し、開始位置だけ本文の左端に揃える。 */}
-        <div className="mt-10 pl-6 md:pl-10">
-          <InterviewCarousel people={employees} />
-        </div>
       </section>
     </>
   );
