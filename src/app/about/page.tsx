@@ -2,30 +2,26 @@ import type { Metadata } from "next";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { RevealImage } from "@/components/ui/RevealImage";
 import { CenterCarousel } from "@/components/ui/CenterCarousel";
 import { VerticalStats } from "@/components/about/VerticalStats";
 import { FiveSensesFace } from "@/components/about/FiveSensesFace";
 import { CommunityStory } from "@/components/about/CommunityStory";
+import { BusinessLines } from "@/components/about/BusinessLines";
+import { OfficeShowcase } from "@/components/about/OfficeShowcase";
+import { FeaturedBenefits } from "@/components/about/FeaturedBenefits";
 import { PositionNetwork } from "@/components/about/PositionNetwork";
 import { BenefitsGrid } from "@/components/about/BenefitsGrid";
 import { WorkDiagram } from "@/components/work/WorkDiagram";
 import { companyStats } from "@/data/company";
 import { communityActivities } from "@/data/community";
-import { uniqueBenefits, treatmentBenefits } from "@/data/benefits";
+import { offices } from "@/data/offices";
+import { uniqueBenefits, treatmentBenefits, featuredBenefits } from "@/data/benefits";
 
 export const metadata: Metadata = {
   title: "ノーブデンスについて",
   description:
     "事業内容、数字で見るノーブデンス、部署構成、職場環境、成長支援、福利厚生など、株式会社ノーブデンスについてご紹介します。",
 };
-
-const businessLines = [
-  { title: "不動産事業", text: "物件の売買・仲介を通じて、お客様に最適な選択肢をご提案します。" },
-  { title: "建築事業", text: "確かな技術と品質管理で、物件の価値をかたちにします。" },
-  { title: "解体事業", text: "安全第一で解体工事を行い、次の土地活用の可能性を拓きます。" },
-  { title: "産業廃棄物収集運搬", text: "適正な処理・運搬体制で、環境と地域社会に配慮した事業を行います。" },
-];
 
 const growthCareerCards = [
   { title: "早期からの裁量", text: "年齢や社歴に関わらず、成果と成長意欲を評価する文化があります。" },
@@ -43,27 +39,16 @@ const training = [
 export default function AboutPage() {
   return (
     <>
-      <PageHeader
-        eyebrow="About Norbdence"
-        title="ノーブデンスについて"
-        description="事業内容から働く環境まで、株式会社ノーブデンスについてご紹介します。"
-      />
+      <PageHeader eyebrow="About Norbdence" title="ノーブデンスについて" />
 
-      <section id="business" className="scroll-mt-20 py-20 md:py-28">
+      <section id="business" className="scroll-mt-20 py-24 md:py-36">
         <Container>
           <SectionHeading eyebrow="Business" title="事業内容" />
-          <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {businessLines.map((b) => (
-              <div key={b.title} className="rounded-2xl border border-[var(--color-paper-200)] p-6">
-                <p className="font-bold text-[var(--color-ink-900)]">{b.title}</p>
-                <p className="mt-2 text-sm leading-relaxed text-[var(--color-ink-700)]">{b.text}</p>
-              </div>
-            ))}
-          </div>
+          <BusinessLines />
         </Container>
       </section>
 
-      <section className="bg-[var(--color-paper-100)] py-20 md:py-28">
+      <section className="section-blend blend-paper-100 py-20 md:py-28">
         <Container>
           <SectionHeading eyebrow="Strengths" title="業界でのポジションと強み" />
           <p className="mt-8 text-sm leading-relaxed text-[var(--color-ink-700)] md:text-base">
@@ -84,7 +69,7 @@ export default function AboutPage() {
         </Container>
       </section>
 
-      <section className="bg-[var(--color-paper-100)] py-20 md:py-28">
+      <section className="section-blend blend-paper-100 py-20 md:py-28">
         <Container>
           <SectionHeading
             eyebrow="Departments"
@@ -108,20 +93,18 @@ export default function AboutPage() {
             <FiveSensesFace />
           </div>
 
-          <div className="mt-16 grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
-            <RevealImage alt="オフィスの様子" label="オフィス写真（仮）" aspectClassName="aspect-[4/3]" parallax />
-            <div>
-              <SectionHeading eyebrow="Office" title="オフィス紹介" />
-              <p className="mt-6 text-sm leading-relaxed text-[var(--color-ink-700)] md:text-base">
-                本社オフィスは、部署を越えたコミュニケーションが自然に生まれるレイアウトを意識しています。
-                若手からベテランまで、フラットに意見を交わせる雰囲気づくりを大切にしています。
-              </p>
-            </div>
+          <div className="mt-20 md:mt-28">
+            <SectionHeading eyebrow="Office" title="オフィス紹介" align="center" />
+            <p className="mx-auto mt-6 max-w-2xl text-center text-sm leading-relaxed text-[var(--color-ink-700)] md:text-base">
+              本社オフィスは、部署を越えたコミュニケーションが自然に生まれるレイアウトを意識しています。
+              若手からベテランまで、フラットに意見を交わせる雰囲気づくりを大切にしています。
+            </p>
+            <OfficeShowcase offices={offices} />
           </div>
         </Container>
       </section>
 
-      <section id="growth" className="scroll-mt-20 bg-[var(--color-paper-100)] py-20 md:py-28">
+      <section id="growth" className="section-blend blend-paper-100 scroll-mt-20 py-20 md:py-28">
         <Container>
           <SectionHeading eyebrow="Growth" title="社員の成長とキャリア形成" />
           <div className="mt-10">
@@ -163,8 +146,11 @@ export default function AboutPage() {
 
       <section id="benefits" className="scroll-mt-20 py-20 md:py-28">
         <Container>
-          <SectionHeading eyebrow="Benefits" title="福利厚生" />
-          <div className="mt-10">
+          <SectionHeading eyebrow="Benefits" title="福利厚生" align="center" />
+          <div className="mt-10 md:mt-12">
+            <FeaturedBenefits benefits={featuredBenefits} />
+          </div>
+          <div className="mt-20 md:mt-28">
             <BenefitsGrid uniqueBenefits={uniqueBenefits} treatmentBenefits={treatmentBenefits} />
           </div>
         </Container>

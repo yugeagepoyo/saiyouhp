@@ -2,7 +2,6 @@ import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
-import { RevealImage } from "@/components/ui/RevealImage";
 import { SectionDecor } from "@/components/ui/SectionDecor";
 
 /** /about 内の各セクションへの導線。アンカーは about ページ側の id と対応。 */
@@ -15,30 +14,16 @@ const aboutTopics = [
   { label: "福利厚生", href: "/about#benefits" },
 ];
 
-/** ABOUT：会社紹介ページへの導線セクション。PCでは「画像｜項目一覧」の横並び。 */
+/** ABOUT：会社紹介ページへの導線セクション。項目一覧のみを中央に並べる。 */
 export function AboutTeaser() {
   return (
-    <section className="relative overflow-hidden bg-[var(--color-ivory-050)] py-24 md:py-40">
+    <section className="section-blend blend-ivory-050 relative overflow-hidden py-24 md:py-40">
       <SectionDecor variant="about" />
       <Container className="relative">
-        <SectionHeading
-          eyebrow="About"
-          title="ノーブデンスについて"
-          description="事業内容から働く環境まで、株式会社ノーブデンスという会社をご紹介します。"
-          align="center"
-        />
+        <SectionHeading eyebrow="About" title="ノーブデンスについて" align="center" />
 
-        {/* 画像を左、項目一覧を右に。項目一覧の列は画像より狭く取り、
-            1つのレイアウトとしてまとまって見えるよう上下中央で揃える。 */}
-        <div className="mt-14 grid grid-cols-1 items-center gap-10 lg:grid-cols-[1fr_minmax(0,29rem)] lg:gap-14">
-          <RevealImage
-            alt="ノーブデンスのオフィスと社員"
-            label="ABOUTビジュアル（仮）"
-            aspectClassName="aspect-[4/3]"
-            className="rounded-3xl"
-            parallax
-          />
-
+        {/* 写真は使わず、項目一覧だけを中央に置く。 */}
+        <div className="mx-auto mt-14 w-full max-w-2xl">
           <ul className="flex flex-col gap-3">
             {aboutTopics.map((topic) => (
               <li key={topic.href}>

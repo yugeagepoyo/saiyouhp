@@ -13,7 +13,7 @@ interface SenseSpot {
   /** 五感名（視覚・聴覚・嗅覚・味覚・触覚） */
   label: string;
   text: string;
-  images: { label: string; src?: string }[];
+  images: { label: string; src?: string; objectPosition?: string }[];
   /** 顔イラスト上のクリック領域。中心座標・半径ともに画像に対する% */
   hotspot: { cx: number; cy: number; rx: number; ry: number };
 }
@@ -24,7 +24,7 @@ const spots: SenseSpot[] = [
     partLabel: "目",
     label: "視覚",
     text: "居心地の良いオフィスデザインで、気持ちよく働ける空間づくりをしています。",
-    images: [{ label: "視覚 写真1（仮）" }, { label: "視覚 写真2（仮）" }],
+    images: [{ label: "視覚の写真", src: "/images/senses/sight.jpg" }],
     hotspot: { cx: 51, cy: 32, rx: 20, ry: 6 },
   },
   {
@@ -32,7 +32,7 @@ const spots: SenseSpot[] = [
     partLabel: "耳",
     label: "聴覚",
     text: "集中とコミュニケーションを両立できる、心地よい音環境に配慮しています。",
-    images: [{ label: "聴覚 写真1（仮）" }, { label: "聴覚 写真2（仮）" }],
+    images: [{ label: "聴覚の写真", src: "/images/senses/hearing.jpg", objectPosition: "center 55%" }],
     hotspot: { cx: 79, cy: 41, rx: 9, ry: 8 },
   },
   {
@@ -40,7 +40,7 @@ const spots: SenseSpot[] = [
     partLabel: "鼻",
     label: "嗅覚",
     text: "オフィス内のリフレッシュスペースで、気分転換できる香りや空間を用意しています。",
-    images: [{ label: "嗅覚 写真1（仮）" }, { label: "嗅覚 写真2（仮）" }],
+    images: [{ label: "嗅覚の写真", src: "/images/senses/smell.jpg" }],
     hotspot: { cx: 50, cy: 41, rx: 8, ry: 7 },
   },
   {
@@ -48,7 +48,7 @@ const spots: SenseSpot[] = [
     partLabel: "口",
     label: "味覚",
     text: "ドリンクや軽食を用意し、休憩時間も楽しく過ごせるようにしています。",
-    images: [{ label: "味覚 写真1（仮）" }, { label: "味覚 写真2（仮）" }],
+    images: [{ label: "味覚の写真", src: "/images/senses/taste.jpg", objectPosition: "center 70%" }],
     hotspot: { cx: 51, cy: 49, rx: 9, ry: 5.5 },
   },
   {
@@ -56,7 +56,7 @@ const spots: SenseSpot[] = [
     partLabel: "手",
     label: "触覚",
     text: "働きやすい什器・設備を整え、日々の作業の快適さにもこだわっています。",
-    images: [{ label: "触覚 写真1（仮）" }, { label: "触覚 写真2（仮）" }],
+    images: [{ label: "触覚の写真", src: "/images/senses/touch.jpg" }],
     hotspot: { cx: 68, cy: 57, rx: 14, ry: 13 },
   },
 ];
@@ -177,8 +177,9 @@ export function FiveSensesFace() {
         </div>
 
         {/* 写真・説明 */}
-        <div className="mx-auto w-full max-w-md text-center lg:mx-0 lg:text-left">
-          <div className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl">
+        <div className="mx-auto w-full max-w-lg text-center lg:mx-0 lg:text-left">
+          {/* 縦位置・横位置の写真が混在するため、どちらも大きく収まる正方形の枠にする。 */}
+          <div className="relative aspect-square w-full overflow-hidden">
             <AnimatePresence mode="wait">
               <motion.div
                 key={`${activeSpot.id}-${imageIndex}`}
@@ -188,7 +189,12 @@ export function FiveSensesFace() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5, ease: EASE_STANDARD }}
               >
-                <PlaceholderImage alt={`${activeSpot.label}のイメージ`} label={activeImage.label} src={activeImage.src} />
+                <PlaceholderImage
+                  alt={`${activeSpot.label}のイメージ`}
+                  label={activeImage.label}
+                  src={activeImage.src}
+                  objectPosition={activeImage.objectPosition}
+                />
               </motion.div>
             </AnimatePresence>
           </div>

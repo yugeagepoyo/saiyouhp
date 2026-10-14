@@ -21,6 +21,8 @@ export interface CommunityActivity {
   link?: { href: string; label: string };
   imageLabel: string;
   imageSrc?: string;
+  /** 横長表示で重要部分が切れないよう調整する表示位置（CSS object-position） */
+  imagePosition?: string;
 }
 
 export const communityActivities: CommunityActivity[] = [
@@ -29,26 +31,29 @@ export const communityActivities: CommunityActivity[] = [
     title: "地域イベントへの参加",
     description:
       "地域のお祭りや清掃活動など、地元に根差したイベントに参加し、地域とのつながりを大切にしています。",
-    imageLabel: "地域イベント写真（仮）",
+    imageLabel: "地域イベント写真",
+    imageSrc: "/images/community/event.jpg",
   },
   {
     id: "sports",
     title: "スポーツ支援",
     description: "地域のスポーツ団体・大会を支援し、子どもたちが安心して打ち込める環境づくりに協力しています。",
-    imageLabel: "スポーツ支援写真（仮）",
+    imageLabel: "スポーツ支援写真",
+    imageSrc: "/images/community/sports.jpg",
   },
   {
     id: "donation",
     title: "寄附・地域貢献",
     description: "地域の福祉活動や災害支援などへの寄附を通じて、社会への還元を継続的に行っています。",
-    stat: { label: "寄附・協賛実績", placeholderText: "XX件" },
-    imageLabel: "寄附・地域貢献写真（仮）",
+    imageLabel: "寄附・地域貢献写真",
+    imageSrc: "/images/community/donation.jpg",
   },
   {
     id: "facility",
-    title: "地域施設との取り組み",
+    title: "地域施設との連携",
     description: "地域の施設・団体と連携し、不動産・建設の知見を活かした協力を行っています。",
-    imageLabel: "地域施設との取り組み写真（仮）",
+    imageLabel: "地域施設との連携写真",
+    imageSrc: "/images/community/facility.jpg",
   },
   {
     id: "other",

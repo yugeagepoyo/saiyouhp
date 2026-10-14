@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Noto_Sans_JP, Archivo, Bodoni_Moda, Shippori_Mincho, Jost } from "next/font/google";
+import { Noto_Sans_JP, Noto_Serif_JP, Archivo, Bodoni_Moda, Jost } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
@@ -36,10 +36,11 @@ const bodoniModa = Bodoni_Moda({
   display: "swap",
 });
 
-const shipporiMincho = Shippori_Mincho({
-  variable: "--font-shippori-mincho",
+// 日本語の明朝。見出しは font-bold(700)、一部の本文で font-medium(500) を使う。
+const notoSerifJp = Noto_Serif_JP({
+  variable: "--font-noto-serif-jp",
   subsets: ["latin"],
-  weight: "500",
+  weight: ["400", "500", "700"],
   display: "swap",
 });
 
@@ -92,7 +93,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="ja"
       data-scroll-behavior="smooth"
-      className={`${notoSansJp.variable} ${archivo.variable} ${bodoniModa.variable} ${shipporiMincho.variable} ${jost.variable} h-full antialiased`}
+      className={`${notoSansJp.variable} ${archivo.variable} ${bodoniModa.variable} ${notoSerifJp.variable} ${jost.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         <RouteTransitionOverlay />

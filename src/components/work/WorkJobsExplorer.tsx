@@ -19,7 +19,7 @@ export function WorkJobsExplorer({ jobs }: { jobs: Job[] }) {
   const [group, setGroup] = useState<JobGroup>("general");
   const filtered = jobs.filter((job) => job.jobGroup === group);
 
-  // 部署ごとにまとめて表示する（例: 総合職→営業部/建設事業部/解体産廃事業部）
+  // 部署ごとにまとめて表示する（例: 総合職→営業部/建設事業部/解体施工部）
   const byDepartment = new Map<string, Job[]>();
   for (const job of filtered) {
     const list = byDepartment.get(job.departmentId) ?? [];
@@ -89,7 +89,7 @@ export function WorkJobsExplorer({ jobs }: { jobs: Job[] }) {
         </div>
       ) : (
         <p className="mt-12 text-sm text-[var(--color-ink-500)]">
-          現在、{groups.find((g) => g.id === group)?.label}の募集はありません。
+          現在募集はありません。
         </p>
       )}
     </div>

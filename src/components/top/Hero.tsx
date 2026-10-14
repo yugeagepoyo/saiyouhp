@@ -50,7 +50,6 @@ export function Hero() {
   // 2つ目のコピーが消えきってから縮小が始まるようにする。
   const videoHeight = useTransform(scrollYProgress, [0.82, 1], ["100%", "72%"]);
   const videoInset = useTransform(scrollYProgress, [0.82, 1], ["0%", "4%"]);
-  const videoRadius = useTransform(scrollYProgress, [0.82, 1], ["0px", "20px"]);
   const videoOverlay = useTransform(scrollYProgress, [0.74, 0.94], [0.35, 0.75]);
 
   return (
@@ -67,7 +66,7 @@ export function Hero() {
             style={
               reduceMotion
                 ? { inset: 0 }
-                : { top: 0, left: videoInset, right: videoInset, height: videoHeight, borderRadius: videoRadius }
+                : { top: 0, left: videoInset, right: videoInset, height: videoHeight }
             }
           >
             <Image

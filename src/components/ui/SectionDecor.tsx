@@ -118,7 +118,12 @@ const variants: Record<DecorVariant, ReactNode> = {
 
 export function SectionDecor({ variant }: { variant: DecorVariant }) {
   return (
-    <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden select-none">
+    // 上下端をマスクでフェードさせる。そうしないと overflow-hidden で
+    // モチーフがセクション境界にぴたりと切り落とされ、そこに段差の線が見えてしまう。
+    <div
+      aria-hidden
+      className="section-decor pointer-events-none absolute inset-0 overflow-hidden select-none"
+    >
       {variants[variant]}
     </div>
   );

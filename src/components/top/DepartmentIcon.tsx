@@ -13,9 +13,8 @@ import { EASE_STANDARD } from "@/lib/motion";
  *   赤の要素だけがわずかに動く。カード側の開閉Motionには手を入れていない。
  */
 
-const SVG_PROPS = {
+const BASE_SVG_PROPS = {
   viewBox: "0 0 32 32",
-  className: "h-9 w-9",
   fill: "none",
   strokeWidth: 1.3,
   strokeLinecap: "round",
@@ -27,7 +26,16 @@ const INK = "var(--color-ink-900)";
 const GRAY = "var(--color-ink-500)";
 const RED = "var(--color-accent-600)";
 
-export function DepartmentIcon({ effect }: { effect: DepartmentHoverEffect }) {
+/** 表示箇所によって大きさを変えられるよう、svgのサイズだけ外から差し替えられるようにする。 */
+export function DepartmentIcon({
+  effect,
+  className = "h-9 w-9",
+}: {
+  effect: DepartmentHoverEffect;
+  className?: string;
+}) {
+  const SVG_PROPS = { ...BASE_SVG_PROPS, className };
+
   switch (effect) {
     // 営業部：人と人の接点。2人の間を赤い線がつなぎ、ホバーで結ばれる。
     case "rising-numbers":
@@ -54,7 +62,7 @@ export function DepartmentIcon({ effect }: { effect: DepartmentHoverEffect }) {
         </svg>
       );
 
-    // 事務・管理部門：重なる書類。ホバーで赤い罫線が整列する。
+    // 管理部：重なる書類。ホバーで赤い罫線が整列する。
     case "aligning-info":
       return (
         <svg {...SVG_PROPS}>
@@ -96,7 +104,7 @@ export function DepartmentIcon({ effect }: { effect: DepartmentHoverEffect }) {
         </svg>
       );
 
-    // 解体産廃事業部：重機のアーム。ホバーでバケットが少し下りる。
+    // 解体施工部：重機のアーム。ホバーでバケットが少し下りる。
     case "deconstructing-blocks":
       return (
         <svg {...SVG_PROPS}>

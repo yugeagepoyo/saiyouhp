@@ -3,19 +3,26 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { RevealImage } from "@/components/ui/RevealImage";
 import { Button } from "@/components/ui/Button";
-import { people } from "@/data/people";
-import { getDepartmentById } from "@/data/departments";
+import { ceo, departmentLeaders } from "@/data/leaders";
 import { SectionDecor } from "@/components/ui/SectionDecor";
 
 const PICKUP_COUNT = 3;
 
-/** PEOPLE：社員紹介。/people と同じ @/data/people を参照し、TOP側で文言を持たない。 */
+/**
+ * PEOPLE：人物紹介。
+ * 「人を知る」ページと同じ @/data/leaders を参照しているため、
+ * 写真・氏名・役職・リンクを更新すればTOPにもそのまま反映される。
+ */
 export function PeoplePickup() {
-  // 社長・部長のメッセージではなく、社員インタビューを抜粋する。
-  const pickups = people.filter((person) => !person.isLeadership).slice(0, PICKUP_COUNT);
+  const allLeaders = [ceo, ...departmentLeaders];
+  // 写真が届いている方を優先して並べ、TOPには3名まで出す。
+  const pickups = [
+    ...allLeaders.filter((person) => person.photoSrc),
+    ...allLeaders.filter((person) => !person.photoSrc),
+  ].slice(0, PICKUP_COUNT);
 
   return (
-    <section className="relative overflow-hidden bg-[var(--color-paper-000)] py-24 md:py-40">
+    <section className="section-blend blend-paper-000 relative overflow-hidden py-24 md:py-40">
       <SectionDecor variant="people" />
       <Container className="relative">
         <SectionHeading
@@ -27,27 +34,32 @@ export function PeoplePickup() {
         {/* 画像の左右端を WORK セクションの1枚画像（max-w-4xl）と揃える */}
         <div className="mx-auto mt-12 grid max-w-4xl grid-cols-1 gap-6 sm:grid-cols-3">
           {pickups.map((person) => (
-            <Link key={person.slug} href={`/people/${person.slug}`} className="group block">
+            <Link
+              key={person.id}
+              // インタビュー詳細がある方はその記事へ、ない方は「人を知る」ページへ。
+              href={person.personSlug ? `/people/${person.personSlug}` : "/people#message"}
+              className="group block"
+            >
               <RevealImage
-                alt={`${person.role}で働く${person.name}`}
-                label="社員写真（仮）"
-                className="rounded-2xl"
+                alt={`${person.role} ${person.name}`}
+                label={person.photoLabel}
+                src={person.photoSrc}
+                aspectClassName="aspect-[3/4]"
+                className="photo-mono"
                 parallax
               />
-              <div className="mt-4 flex items-center gap-2">
-                <p className="text-sm font-bold text-[var(--color-ink-900)] group-hover:text-[var(--color-accent-600)]">
+              <p className="mt-4 text-[11px] tracking-[0.16em] text-[var(--color-accent-600)]">
+                {person.role}
+              </p>
+              {/* 氏名の右横に英字表記を並べる */}
+              <div className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <p className="font-serif-jp text-lg font-bold text-[var(--color-ink-900)] group-hover:text-[var(--color-accent-600)]">
                   {person.name}
                 </p>
-                {person.isSample && (
-                  <span className="rounded-full bg-[var(--color-accent-500)]/15 px-2 py-0.5 text-[10px] text-[var(--color-accent-600)]">
-                    サンプル
-                  </span>
-                )}
+                <p className="font-heading-en text-[10px] tracking-[0.22em] text-[var(--color-ink-500)] uppercase">
+                  {person.nameEn}
+                </p>
               </div>
-              <p className="text-xs text-[var(--color-ink-500)]">
-                {getDepartmentById(person.departmentId)?.name ?? person.role} / {person.joinYear}
-              </p>
-              <p className="mt-3 text-sm leading-relaxed text-[var(--color-ink-700)]">{person.quote}</p>
             </Link>
           ))}
         </div>

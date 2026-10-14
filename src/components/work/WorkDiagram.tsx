@@ -5,7 +5,6 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
 import { departments, getDepartmentById, type Department } from "@/data/departments";
 import { jobs } from "@/data/jobs";
-import { people } from "@/data/people";
 import { DepartmentIcon } from "@/components/top/DepartmentIcon";
 import { fadeUpVariants, staggerContainer, EASE_STANDARD } from "@/lib/motion";
 
@@ -87,14 +86,18 @@ function DepartmentCard({
       whileHover="hover"
       whileFocus="hover"
       whileTap="hover"
-      className={`group flex h-full w-full flex-col justify-between gap-4 rounded-2xl border border-[var(--color-paper-200)] bg-[var(--color-paper-050)] p-5 text-left transition-all duration-300 hover:border-[var(--color-accent-500)] ${
+      // アイコンを上段に大きく置き、部署名・説明・リンクまで中央揃えにする。
+      // 塗りを外して罫線だけにし、カードとしての主張を抑える。
+      className={`group flex h-full w-full flex-col items-center justify-between gap-5 rounded-2xl border border-[var(--color-paper-200)] px-4 py-7 text-center transition-all duration-300 hover:border-[var(--color-accent-500)] md:px-6 md:py-9 ${
         isDimmed ? "scale-[0.97] opacity-30" : "scale-100 opacity-100"
       }`}
     >
-      <DepartmentIcon effect={department.hoverEffect} />
+      <DepartmentIcon effect={department.hoverEffect} className="h-14 w-14 md:h-16 md:w-16" />
       <div>
-        <p className="font-bold text-[var(--color-ink-900)]">{department.name}</p>
-        <p className="mt-1 text-xs leading-relaxed text-[var(--color-ink-500)]">{department.shortDescription}</p>
+        <p className="text-2xl leading-tight font-bold text-[var(--color-ink-900)] md:text-[2rem]">
+          {department.name}
+        </p>
+        <p className="mt-3 text-xs leading-relaxed text-[var(--color-ink-500)]">{department.shortDescription}</p>
       </div>
       <span className="text-xs font-medium text-[var(--color-accent-600)]">詳しく見る →</span>
     </motion.button>
@@ -111,7 +114,6 @@ function DepartmentPanel({
   onClose: () => void;
 }) {
   const relatedJobs = jobs.filter((j) => j.published && j.departmentId === department.id);
-  const relatedPeople = people.filter((p) => p.departmentId === department.id);
   const transformOrigin = origin ? `${origin.xPercent}% ${origin.yPercent}%` : "50% 50%";
 
   return (
@@ -198,26 +200,6 @@ function DepartmentPanel({
 
               <div>
                 <div className="border-t border-[var(--color-paper-200)] pt-6 md:border-t-0 md:pt-0">
-                  <p className="mb-3 text-xs font-medium text-[var(--color-ink-500)]">社員紹介</p>
-                  {relatedPeople.length > 0 ? (
-                    <ul className="space-y-2">
-                      {relatedPeople.map((p) => (
-                        <li key={p.slug}>
-                          <Link
-                            href={`/people/${p.slug}`}
-                            className="text-sm text-[var(--color-accent-600)] hover:underline"
-                          >
-                            {p.name}のインタビューを見る →
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="text-sm text-[var(--color-ink-500)]">準備中です。</p>
-                  )}
-                </div>
-
-                <div className="mt-6 border-t border-[var(--color-paper-200)] pt-6">
                   <p className="mb-3 text-xs font-medium text-[var(--color-ink-500)]">募集職種</p>
                   {relatedJobs.length > 0 ? (
                     <ul className="space-y-2">
@@ -233,7 +215,7 @@ function DepartmentPanel({
                       ))}
                     </ul>
                   ) : (
-                    <p className="text-sm text-[var(--color-ink-500)]">現在この部署の募集はありません。</p>
+                    <p className="text-sm text-[var(--color-ink-500)]">現在募集はありません。</p>
                   )}
                 </div>
               </div>

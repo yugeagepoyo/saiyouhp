@@ -35,6 +35,8 @@ function buildIndex(): SearchEntry[] {
   }
 
   for (const person of people) {
+    // 本文未確定（詳細ページなし）の社員は検索対象にしない。
+    if (person.interviewPending) continue;
     entries.push({
       title: `${person.name}（${person.role}）`,
       description: person.quote,

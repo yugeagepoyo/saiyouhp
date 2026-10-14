@@ -28,7 +28,13 @@ function StatDisplay({ stat, active }: { stat: NonNullable<CommunityActivity["st
   );
 }
 
-const AUTO_PLAY_INTERVAL_MS = 4000;
+const AUTO_PLAY_INTERVAL_MS = 4500;
+/** 手動操作後に自動再生へ戻るまでの時間。自動送りの間隔とは独立させ、従来の挙動を保つ。 */
+const MANUAL_PAUSE_MS = 4000;
+/** 写真のクロスフェード時間。前後の写真を重ねたままゆっくり入れ替える。 */
+const PHOTO_FADE_S = 0.6;
+/** タイトル・説明文の切り替え時間。写真と同じタイミングで入れ替わるよう揃えている。 */
+const TEXT_FADE_S = 0.3;
 
 /** 地域や社会への還元：1つの活動を大きく見せるストーリー型UI。左に写真、右にテキストと数字。 */
 export function CommunityStory({ activities }: { activities: CommunityActivity[] }) {
@@ -52,7 +58,7 @@ export function CommunityStory({ activities }: { activities: CommunityActivity[]
   function pauseAutoPlayThenResume() {
     setManualPause(true);
     if (resumeTimer.current) clearTimeout(resumeTimer.current);
-    resumeTimer.current = setTimeout(() => setManualPause(false), AUTO_PLAY_INTERVAL_MS);
+    resumeTimer.current = setTimeout(() => setManualPause(false), MANUAL_PAUSE_MS);
   }
 
   function go(direction: 1 | -1) {
@@ -82,90 +88,95 @@ export function CommunityStory({ activities }: { activities: CommunityActivity[]
   }, []);
 
   return (
-    <div
-      onMouseEnter={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}
-      className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16"
-    >
-      <div className="relative">
-        <div ref={photoRef} className="relative aspect-[4/3] overflow-hidden rounded-3xl lg:aspect-[3/4]">
+    <div onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>
+      {/* 上部：タイトルと説明文。下部に横長の大きな写真を置く縦構成。 */}
+      <div className="flex flex-wrap items-end justify-between gap-6">
+        <div className="min-w-0 max-w-3xl">
+          <p className="font-display text-xs tracking-[0.3em] text-[var(--color-accent-600)] uppercase">
+            {String(active + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+          </p>
+
           <AnimatePresence mode="wait">
             <motion.div
               key={activity.id}
-              className="absolute inset-[-6%]"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5, ease: EASE_STANDARD }}
-              style={{ y: parallaxY }}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: TEXT_FADE_S, ease: EASE_STANDARD }}
             >
-              <PlaceholderImage alt={activity.title} label={activity.imageLabel} src={activity.imageSrc} />
+              <h3 className="font-serif-jp mt-4 text-2xl font-bold text-[var(--color-ink-900)] md:text-4xl">
+                {activity.title}
+              </h3>
+              <p className="jp-pretty mt-5 text-sm leading-loose text-[var(--color-ink-700)] md:text-base">
+                {activity.description}
+              </p>
+              {activity.stat && <StatDisplay stat={activity.stat} active />}
+              {activity.link && (
+                <a
+                  href={activity.link.href}
+                  className="mt-6 inline-block text-sm font-medium text-[var(--color-accent-600)] underline underline-offset-4"
+                >
+                  {activity.link.label} →
+                </a>
+              )}
             </motion.div>
           </AnimatePresence>
         </div>
 
-        <button
-          type="button"
-          aria-label="前の活動を表示"
-          onClick={() => go(-1)}
-          className="absolute top-1/2 left-[-3%] z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-[var(--color-paper-200)]/40 bg-[var(--color-paper-050)]/40 text-lg text-[var(--color-ink-700)] shadow-md transition-transform duration-200 hover:scale-110 hover:border-[var(--color-accent-600)] sm:h-12 sm:w-12 md:left-[-4%] lg:left-[-5%]"
-        >
-          ‹
-        </button>
-        <button
-          type="button"
-          aria-label="次の活動を表示"
-          onClick={() => go(1)}
-          className="absolute top-1/2 right-[-3%] z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-[var(--color-paper-200)]/40 bg-[var(--color-paper-050)]/40 text-lg text-[var(--color-ink-700)] shadow-md transition-transform duration-200 hover:scale-110 hover:border-[var(--color-accent-600)] sm:h-12 sm:w-12 md:right-[-4%] lg:right-[-5%]"
-        >
-          ›
-        </button>
+        <div className="flex shrink-0 items-center gap-2">
+          <button
+            type="button"
+            aria-label="前の活動を表示"
+            onClick={() => go(-1)}
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--color-paper-200)] text-lg text-[var(--color-ink-700)] transition-colors hover:border-[var(--color-accent-600)] hover:text-[var(--color-accent-600)]"
+          >
+            ‹
+          </button>
+          <button
+            type="button"
+            aria-label="次の活動を表示"
+            onClick={() => go(1)}
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--color-paper-200)] text-lg text-[var(--color-ink-700)] transition-colors hover:border-[var(--color-accent-600)] hover:text-[var(--color-accent-600)]"
+          >
+            ›
+          </button>
+        </div>
       </div>
 
-      <div>
-        <p className="font-display text-xs tracking-[0.3em] text-[var(--color-accent-600)] uppercase">
-          {String(active + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
-        </p>
-
-        <AnimatePresence mode="wait">
+      {/* 下部：横幅いっぱいの横長写真 */}
+      <div ref={photoRef} className="relative mt-10 aspect-[4/3] overflow-hidden md:mt-14 md:aspect-[16/10]">
+        <AnimatePresence>
           <motion.div
             key={activity.id}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -16 }}
-            transition={{ duration: 0.45, ease: EASE_STANDARD }}
+            className="absolute inset-[-4%]"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: PHOTO_FADE_S, ease: "easeInOut" }}
+            style={{ y: parallaxY }}
           >
-            <h3 className="font-serif-jp mt-3 text-center text-2xl font-bold text-[var(--color-ink-900)] md:text-3xl">
-              {activity.title}
-            </h3>
-            <p className="mt-4 text-sm leading-relaxed text-[var(--color-ink-700)] md:text-base">
-              {activity.description}
-            </p>
-            {activity.stat && <StatDisplay stat={activity.stat} active />}
-            {activity.link && (
-              <a
-                href={activity.link.href}
-                className="mt-6 inline-block text-sm font-medium text-[var(--color-accent-600)] underline underline-offset-4"
-              >
-                {activity.link.label} →
-              </a>
-            )}
+            <PlaceholderImage
+              alt={activity.title}
+              label={activity.imageLabel}
+              src={activity.imageSrc}
+              objectPosition={activity.imagePosition}
+            />
           </motion.div>
         </AnimatePresence>
+      </div>
 
-        <div className="mt-10 flex items-center gap-2">
-          {activities.map((a, i) => (
-            <button
-              key={a.id}
-              type="button"
-              aria-label={`${a.title}を表示`}
-              onClick={() => selectIndex(i)}
-              className={`h-1.5 rounded-full transition-all ${
-                i === active ? "w-6 bg-[var(--color-accent-600)]" : "w-1.5 bg-[var(--color-paper-200)]"
-              }`}
-            />
-          ))}
-        </div>
+      <div className="mt-6 flex items-center gap-2">
+        {activities.map((a, i) => (
+          <button
+            key={a.id}
+            type="button"
+            aria-label={`${a.title}を表示`}
+            onClick={() => selectIndex(i)}
+            className={`h-1.5 rounded-full transition-all ${
+              i === active ? "w-6 bg-[var(--color-accent-600)]" : "w-1.5 bg-[var(--color-paper-200)]"
+            }`}
+          />
+        ))}
       </div>
     </div>
   );

@@ -9,13 +9,25 @@ export function PlaceholderImage({
   alt,
   label,
   src,
+  objectPosition,
 }: {
   alt: string;
   label?: string;
   src?: string;
+  /** 被写体が切れないよう表示位置を調整したい場合に指定（CSS object-position） */
+  objectPosition?: string;
 }) {
   if (src) {
-    return <Image src={src} alt={alt} fill sizes="100vw" className="object-cover" />;
+    return (
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        sizes="100vw"
+        className="object-cover"
+        style={objectPosition ? { objectPosition } : undefined}
+      />
+    );
   }
 
   return (

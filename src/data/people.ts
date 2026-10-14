@@ -30,6 +30,14 @@ export interface Person {
   isSample?: boolean;
   /** 社長・部長メッセージ枠（LeadershipSlide）に表示する対象かどうか */
   isLeadership?: boolean;
+  /** 氏名のフリガナ（共有済みの方のみ） */
+  kana?: string;
+  /** 共有済みの本人写真。未着の場合はプレースホルダーを表示する。 */
+  photoSrc?: string;
+  /** 顔が切れないよう調整する写真の表示位置（CSS object-position） */
+  photoPosition?: string;
+  /** 取材前で本文が未確定。カードに写真・氏名のみ出し、詳細ページは作らない。 */
+  interviewPending?: boolean;
 
   // 基本質問（すべて任意。回答がある項目のみ詳細ページに表示する）
   previousCareer?: string; // 入社前は何をしていましたか？
@@ -53,7 +61,8 @@ export interface Person {
 export const people: Person[] = [
   {
     slug: "ceo",
-    name: "氏名（仮）",
+    name: "山住 広大",
+    photoSrc: "/images/people/ceo.jpg",
     departmentId: "executive",
     role: "代表取締役",
     joinYear: "創業",
@@ -69,7 +78,8 @@ export const people: Person[] = [
   },
   {
     slug: "construction-manager",
-    name: "氏名（仮）",
+    name: "山住 豪志",
+    photoSrc: "/images/people/construction-manager.jpg",
     departmentId: "construction",
     role: "建設事業部 部長",
     joinYear: "20XX年入社",
@@ -83,9 +93,10 @@ export const people: Person[] = [
   },
   {
     slug: "sales-manager",
-    name: "氏名（仮）",
+    name: "安部 真成",
+    photoSrc: "/images/people/sales-1-manager.jpg",
     departmentId: "sales",
-    role: "営業部 部長",
+    role: "第一営業部 部長",
     joinYear: "20XX年入社",
     quote: "（サンプル）成果がそのまま評価につながる環境です。",
     isSample: true,
@@ -93,6 +104,82 @@ export const people: Person[] = [
     currentWork: "（サンプル）営業部全体のマネジメント、目標設計とメンバーの育成を担当しています。",
     growthMoment: "（サンプル）メンバーが自ら考えて動けるチームに育ってきたことです。",
     messageToApplicants: "（サンプル）成果がそのまま評価につながる環境です。若手にも積極的に裁量を渡しています。",
+  },
+  {
+    // 以下3名は取材前のため、本文はすべてサンプル。氏名・役職・写真のみ確定情報。
+    slug: "sales-2-manager",
+    name: "大塚 力哉",
+    photoSrc: "/images/people/sales-2-manager.jpg",
+    departmentId: "sales",
+    role: "第二営業部 部長",
+    joinYear: "20XX年入社",
+    quote: "（サンプル）一人ひとりの挑戦を、チームで後押しする営業部です。",
+    isSample: true,
+    isLeadership: true,
+    currentWork: "（サンプル）第二営業部のマネジメント、メンバーの同行・育成を担当しています。",
+    messageToApplicants: "（サンプル）取材前のため、メッセージは後日掲載いたします。",
+  },
+  {
+    slug: "demolition-manager",
+    name: "石井 克樹",
+    departmentId: "demolition",
+    role: "解体施工部 部長",
+    joinYear: "20XX年入社",
+    quote: "（サンプル）安全第一で、確実に現場を進めることを大切にしています。",
+    isSample: true,
+    isLeadership: true,
+    currentWork: "（サンプル）解体施工部のマネジメント、現場の安全管理を担当しています。",
+    messageToApplicants: "（サンプル）取材前のため、メッセージは後日掲載いたします。",
+  },
+  {
+    slug: "finance-admin-manager",
+    name: "立石 裕也",
+    departmentId: "finance",
+    role: "財務戦略部・管理部 部長",
+    joinYear: "20XX年入社",
+    quote: "（サンプル）数字と仕組みの面から、現場が動きやすい会社をつくります。",
+    isSample: true,
+    isLeadership: true,
+    currentWork: "（サンプル）財務戦略部・管理部のマネジメントを担当しています。",
+    messageToApplicants: "（サンプル）取材前のため、メッセージは後日掲載いたします。",
+  },
+  {
+    // 以下3名は写真・氏名・所属のみ共有済み。本文は取材前のため作成しない（interviewPending）。
+    slug: "tome-yuki",
+    name: "當銘 祐樹",
+    departmentId: "construction",
+    role: "建設事業部 主任",
+    joinYear: "",
+    quote: "",
+    photoSrc: "/images/people/tome-yuki.jpg",
+    // 横位置の写真のため、顔が中心に来るよう右寄りで切り抜く。
+    photoPosition: "55% center",
+    interviewPending: true,
+  },
+  {
+    slug: "hanayama-hikaru",
+    name: "花山 晃",
+    kana: "ハナヤマ ヒカル",
+    departmentId: "sales",
+    role: "第二営業部 主任",
+    joinYear: "",
+    quote: "",
+    photoSrc: "/images/people/hanayama-hikaru.jpg",
+    photoPosition: "60% center",
+    interviewPending: true,
+  },
+  {
+    slug: "nagato-ryosei",
+    name: "長戸 涼星",
+    kana: "ナガト リョウセイ",
+    departmentId: "sales",
+    role: "第二営業部 主任",
+    joinYear: "",
+    quote: "",
+    photoSrc: "/images/people/nagato-ryosei.jpg",
+    // 縦位置の写真のため、頭が切れないよう上寄りで切り抜く。
+    photoPosition: "center 25%",
+    interviewPending: true,
   },
   {
     slug: "sample-sales-01",
@@ -151,7 +238,7 @@ export const people: Person[] = [
     slug: "sample-admin-01",
     name: "社員名（仮）",
     departmentId: "admin",
-    role: "事務・管理部門",
+    role: "管理部",
     joinYear: "20XX年入社",
     quote: "（サンプル）会社全体を支えている実感があるから、地味な業務にも誇りを持てます。",
     isSample: true,

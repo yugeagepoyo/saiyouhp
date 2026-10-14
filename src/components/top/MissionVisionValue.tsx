@@ -3,23 +3,19 @@
 import { motion } from "motion/react";
 import { Container } from "@/components/ui/Container";
 import { fadeUpVariants, staggerContainer } from "@/lib/motion";
-import { mvvBlocks, valuePillars } from "@/data/mvv";
+import { mvvBlocks, valuePillars, mvvLead } from "@/data/mvv";
 import { SectionDecor, type DecorVariant } from "@/components/ui/SectionDecor";
 
-/** セクションごとの背景色と装飾。MISSIONは白、VISIONは白〜ライトグレー、VALUEはアイボリー。 */
+/**
+ * セクションごとの背景色と装飾。MISSIONは白、VISIONは白〜ライトグレー、VALUEは白。
+ * 色は section-blend（globals.css）で上下端を透過させて敷くため、
+ * 隣のセクションとの境界に色の切れ目ができない。
+ */
 const blockBackgrounds: Record<string, { bg: string; decor: DecorVariant }> = {
-  mission: { bg: "bg-[var(--color-paper-000)]", decor: "mission" },
-  vision: { bg: "bg-[var(--color-paper-050)]", decor: "vision" },
-  value: { bg: "bg-[var(--color-paper-000)]", decor: "value" },
+  mission: { bg: "section-blend blend-paper-000", decor: "mission" },
+  vision: { bg: "section-blend blend-paper-050", decor: "vision" },
+  value: { bg: "section-blend blend-paper-000", decor: "value" },
 };
-
-function PendingBadge() {
-  return (
-    <span className="ml-2 shrink-0 rounded-full bg-[var(--color-ink-900)] px-2 py-0.5 align-middle text-[10px] font-normal text-[var(--color-paper-050)]">
-      確認中
-    </span>
-  );
-}
 
 /**
  * Mission / Vision / Value。
@@ -47,62 +43,62 @@ export function MissionVisionValue() {
               variants={staggerContainer(0.14)}
               className="text-center"
             >
+              {index === 0 && (
+                <motion.p
+                  variants={fadeUpVariants}
+                  className="mb-8 text-sm tracking-[0.1em] text-[var(--color-ink-700)] md:mb-10 md:text-base"
+                >
+                  {mvvLead}
+                </motion.p>
+              )}
               <motion.p
                 variants={fadeUpVariants}
-                className="font-heading-en text-[17px] font-light tracking-[0.25em] text-[var(--color-accent-600)] uppercase"
+                className="font-heading-en text-[clamp(2.65rem,9vw,4rem)] leading-none font-light tracking-[0.14em] text-[var(--color-accent-600)] uppercase"
               >
                 {block.eyebrow}
               </motion.p>
-              <motion.p
+              {/* 英字見出しの下に引く赤い罫線 */}
+              <motion.span
+                aria-hidden
                 variants={fadeUpVariants}
-                className="mt-2 text-xs tracking-[0.2em] text-[var(--color-ink-500)]"
-              >
-                {block.label}
-              </motion.p>
+                className="mx-auto mt-6 block h-px w-24 bg-[var(--color-accent-600)] md:mt-7 md:w-32"
+              />
 
               <motion.p
                 variants={fadeUpVariants}
-                className="font-serif-jp mt-8 text-xl leading-relaxed font-bold text-[var(--color-ink-900)] md:text-3xl md:leading-relaxed"
+                className="jp-balance font-serif-jp mt-8 text-xl leading-relaxed font-bold text-[var(--color-ink-900)] md:text-3xl md:leading-relaxed"
               >
                 {block.statement}
               </motion.p>
 
-              <motion.div variants={fadeUpVariants}>
-                {block.body ? (
-                  <p className="mx-auto mt-8 max-w-2xl text-sm leading-loose text-[var(--color-ink-700)] md:text-base">
-                    {block.body}
-                  </p>
-                ) : (
-                  <p className="mt-8 text-sm text-[var(--color-ink-500)]">
-                    本文
-                    <PendingBadge />
-                  </p>
-                )}
-              </motion.div>
+              {block.body && (
+                <motion.p
+                  variants={fadeUpVariants}
+                  className="jp-pretty mx-auto mt-8 max-w-2xl text-sm leading-loose text-[var(--color-ink-700)] md:text-base"
+                >
+                  {block.body}
+                </motion.p>
+              )}
 
               {block.id === "value" && (
                 <motion.div
                   variants={fadeUpVariants}
-                  className="mt-12 grid grid-cols-1 gap-4 text-left sm:grid-cols-3"
+                  className="mt-12 flex flex-col items-center gap-5 sm:mx-auto sm:w-fit sm:items-stretch"
                 >
+                  {/* 3つを縦に積み、PCでは1項目＝1行に収める。
+                      見出しの幅を揃えることで、本文の開始位置も縦に揃う。
+                      スマートフォンは1行に収まらないため折り返す（jp-balanceで行長を整える）。 */}
                   {valuePillars.map((pillar) => (
                     <div
                       key={pillar.id}
-                      className="rounded-2xl border border-[var(--color-paper-200)] px-6 py-7"
+                      className="flex flex-col items-center gap-1 sm:flex-row sm:items-baseline sm:gap-5"
                     >
-                      <p className="font-serif-jp text-lg font-bold text-[var(--color-ink-900)]">
+                      <p className="font-serif-jp shrink-0 text-base font-bold text-[var(--color-ink-900)] sm:w-16 sm:text-right md:text-lg">
                         {pillar.title}
                       </p>
-                      {pillar.body ? (
-                        <p className="mt-3 text-sm leading-relaxed text-[var(--color-ink-700)]">
-                          {pillar.body}
-                        </p>
-                      ) : (
-                        <p className="mt-3 text-xs text-[var(--color-ink-500)]">
-                          説明文
-                          <PendingBadge />
-                        </p>
-                      )}
+                      <p className="jp-balance text-sm leading-relaxed text-[var(--color-ink-700)] sm:text-left sm:whitespace-nowrap">
+                        {pillar.body}
+                      </p>
                     </div>
                   ))}
                 </motion.div>

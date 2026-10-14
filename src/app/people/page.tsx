@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { PeopleCarousel } from "@/components/people/PeopleCarousel";
-import { LeadershipSlide } from "@/components/people/LeadershipSlide";
+import { InterviewCarousel } from "@/components/people/InterviewCarousel";
+import { CeoMessage } from "@/components/people/CeoMessage";
+import { LeadersMarquee } from "@/components/people/LeadersMarquee";
 import { people } from "@/data/people";
+import { ceo, departmentLeaders } from "@/data/leaders";
 
 export const metadata: Metadata = {
   title: "人を知る",
@@ -12,7 +14,6 @@ export const metadata: Metadata = {
 };
 
 export default function PeoplePage() {
-  const leaders = people.filter((p) => p.isLeadership);
   const employees = people.filter((p) => !p.isLeadership);
 
   return (
@@ -23,21 +24,38 @@ export default function PeoplePage() {
         description="入社のきっかけ、現在の仕事、これからの目標。ノーブデンスで働く社員たちのリアルな声を紹介します。"
       />
 
-      <div id="message" className="scroll-mt-20">
-        <Container className="pb-6">
-          <SectionHeading eyebrow="Message" title="社長・部長メッセージ" />
+      <section id="message" className="scroll-mt-20 py-20 md:py-28">
+        <Container>
+          <SectionHeading eyebrow="Message" title="代表・部門長メッセージ" />
+          <div className="mt-14 md:mt-20">
+            <CeoMessage ceo={ceo} />
+          </div>
         </Container>
-        {leaders.map((leader, i) => (
-          <LeadershipSlide key={leader.slug} leader={leader} index={i} />
-        ))}
-      </div>
+
+        <div className="mt-24 md:mt-36">
+          <Container>
+            <div className="flex items-center gap-4">
+              <span aria-hidden className="h-px w-10 bg-[var(--color-accent-600)]" />
+              <h3 className="font-heading-en text-sm tracking-[0.2em] text-[var(--color-ink-900)] uppercase md:text-base">
+                Department Leaders
+              </h3>
+            </div>
+          </Container>
+          {/* カルーセルは画面端まで流すため Container の外に出し、
+              開始位置だけ本文の左端に揃える。 */}
+          <div className="mt-10 pl-6 md:mt-14 md:pl-10">
+            <LeadersMarquee leaders={departmentLeaders} />
+          </div>
+        </div>
+      </section>
 
       <section id="interview" className="scroll-mt-20 py-20 md:py-28">
         <Container>
           <SectionHeading eyebrow="Interview" title="社員インタビュー" />
         </Container>
-        <div className="mt-10">
-          <PeopleCarousel people={employees} />
+        {/* カルーセルは画面端まで流すため Container の外に出し、開始位置だけ本文の左端に揃える。 */}
+        <div className="mt-10 pl-6 md:pl-10">
+          <InterviewCarousel people={employees} />
         </div>
       </section>
     </>

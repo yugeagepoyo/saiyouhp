@@ -17,7 +17,7 @@ export function RecruitingInformation() {
   const pickups = jobs.filter((job) => job.published).slice(0, PICKUP_COUNT);
 
   return (
-    <section className="relative overflow-hidden bg-[var(--color-paper-000)] py-24 md:py-40">
+    <section className="section-blend blend-paper-000 relative overflow-hidden py-24 md:py-40">
       <SectionDecor variant="recruit" />
       <Container className="relative">
         <SectionHeading eyebrow="Recruit" title="採用情報" align="center" />
@@ -27,7 +27,6 @@ export function RecruitingInformation() {
             alt="ノーブデンスで働く社員"
             label="採用イメージ（仮）"
             aspectClassName="aspect-[16/9]"
-            className="rounded-3xl"
             parallax
           />
         </div>

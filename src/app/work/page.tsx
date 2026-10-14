@@ -35,7 +35,7 @@ export default function WorkPage() {
         </Container>
       </section>
 
-      <section id="jobs" className="scroll-mt-20 bg-[var(--color-paper-100)] py-16 md:py-24">
+      <section id="jobs" className="section-blend blend-paper-100 scroll-mt-20 py-16 md:py-24">
         <Container>
           <SectionHeading
             eyebrow="Find Your Role"

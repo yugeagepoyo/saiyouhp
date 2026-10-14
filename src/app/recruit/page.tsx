@@ -20,11 +20,12 @@ export default function RecruitPage() {
         description="中途採用・新卒採用の募集職種をご案内します。気になる職種があれば、詳細ページからエントリーください。"
       />
 
-      <section className="py-16 md:py-24">
-        <Container>
+      {/* 職種一覧は募集要項の詳細ページと同じ赤地に、アイボリーの面で載せる。 */}
+      <div className="bg-[var(--color-accent-muted)] py-16 md:py-24">
+        <Container className="max-w-[1600px] md:px-14">
           <RecruitTabs jobs={publishedJobs} />
         </Container>
-      </section>
+      </div>
     </>
   );
 }

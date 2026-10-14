@@ -7,7 +7,7 @@ export function Philosophy() {
   const { philosophy, management } = companyOverview;
 
   return (
-    <section className="bg-[var(--color-paper-100)] py-24 md:py-32">
+    <section className="section-blend blend-paper-100 py-24 md:py-32">
       <Container className="max-w-3xl">
         <CoreHeading
           eyebrow={philosophy.title}

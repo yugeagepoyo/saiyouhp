@@ -21,7 +21,7 @@ export function WorkPickup() {
   const label = groups.find((g) => g.id === group)?.label ?? "";
 
   return (
-    <section className="relative overflow-hidden bg-[var(--color-paper-050)] py-24 md:py-40">
+    <section className="section-blend blend-paper-050 relative overflow-hidden py-24 md:py-40">
       <SectionDecor variant="work" />
       <Container className="relative">
         <SectionHeading
@@ -68,7 +68,6 @@ export function WorkPickup() {
                 alt={`${label}の仕事風景`}
                 label={`${label}の写真（仮）`}
                 aspectClassName="aspect-[16/9]"
-                className="rounded-3xl"
                 revealOnMount
                 parallax
               />

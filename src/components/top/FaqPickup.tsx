@@ -12,7 +12,7 @@ export function FaqPickup() {
   const pickups = faqItems.filter((item) => item.status !== "pending").slice(0, PICKUP_COUNT);
 
   return (
-    <section className="relative overflow-hidden bg-[var(--color-ivory-050)] py-24 md:py-40">
+    <section className="section-blend blend-ivory-050 relative overflow-hidden py-24 md:py-40">
       <SectionDecor variant="faq" />
       <Container className="relative max-w-3xl">
         <SectionHeading eyebrow="FAQ" title="よくある質問" align="center" />
