@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Noto_Sans_JP, Noto_Serif_JP, Archivo, Bodoni_Moda, Jost } from "next/font/google";
+import { Archivo, Bodoni_Moda, Jost } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
@@ -12,12 +12,16 @@ import { RouteTransitionOverlay } from "@/components/layout/RouteTransitionOverl
 import { SITE_URL } from "@/data/nav";
 import { ALLOW_INDEXING } from "@/lib/siteEnv";
 
-const notoSansJp = Noto_Sans_JP({
-  variable: "--font-noto-sans-jp",
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
-  display: "swap",
-});
+/**
+ * 日本語2書体（Noto Sans JP / Noto Serif JP）だけはGoogle Fontsのスタイルシートから読み込む。
+ * next/font/google で読むと、CJKを約120分割した woff2 を2書体×3ウェイトぶん
+ * （計744ファイル）ビルド時に取得するため、fonts.gstatic.com への接続が詰まって
+ * ビルドが落ちることがある（Vercelのコールドビルドで再現）。
+ * CDN配信なら実際に使う文字の分割ファイルだけが読み込まれ、ビルドは外部通信に依存しない。
+ * 書体・ウェイト（400/500/700）は従来と同じ。
+ */
+const JP_FONTS_HREF =
+  "https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;500;700&display=swap";
 
 // ナビゲーション・小見出し・数字用：細身で直線的なモダン・グロテスク。
 // 「数字で見るノーブデンス」の数値を太く大きく見せるため、SemiBold(600)も読み込む。
@@ -33,14 +37,6 @@ const bodoniModa = Bodoni_Moda({
   variable: "--font-bodoni-moda",
   subsets: ["latin"],
   weight: ["400", "500"],
-  display: "swap",
-});
-
-// 日本語の明朝。見出しは font-bold(700)、一部の本文で font-medium(500) を使う。
-const notoSerifJp = Noto_Serif_JP({
-  variable: "--font-noto-serif-jp",
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
   display: "swap",
 });
 
@@ -93,9 +89,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="ja"
       data-scroll-behavior="smooth"
-      className={`${notoSansJp.variable} ${archivo.variable} ${bodoniModa.variable} ${notoSerifJp.variable} ${jost.variable} h-full antialiased`}
+      className={`${archivo.variable} ${bodoniModa.variable} ${jost.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
+        {/* 日本語フォント。React が <head> へ巻き上げる。 */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="stylesheet" href={JP_FONTS_HREF} precedence="default" />
         <RouteTransitionOverlay />
         <Header />
         <SiteSearch />
