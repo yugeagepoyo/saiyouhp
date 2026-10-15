@@ -30,6 +30,12 @@ const paths: Record<NavIconName, ReactNode> = {
     </>
   ),
   entry: <path d="M12 3v13m0 0-4-4m4 4 4-4M4 19h16" />,
+  contact: (
+    <>
+      <rect x="3" y="5" width="18" height="14" rx="1.5" />
+      <path d="m3.5 6.5 8.5 6 8.5-6" />
+    </>
+  ),
   departments: (
     <>
       <circle cx="12" cy="5" r="2.2" />

@@ -152,6 +152,13 @@ export function StatCard({ stat }: { stat: CompanyStat }) {
             </p>
           )}
 
+          {/* 数値が未確定の項目は、仮表記（「◯日」など）をそのまま見せる。 */}
+          {stat.display === "counter" && isPlaceholder && (
+            <p className="font-display text-5xl leading-none font-semibold text-[var(--color-ink-900)] md:text-6xl">
+              {stat.placeholderText}
+            </p>
+          )}
+
           {stat.display === "pie" && (
             <div className="relative flex h-28 w-28 items-center justify-center">
               <PieValue percent={percent} active={inView} />

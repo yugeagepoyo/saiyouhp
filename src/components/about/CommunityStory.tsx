@@ -38,6 +38,8 @@ const TEXT_FADE_S = 0.3;
 
 /** 地域や社会への還元：1つの活動を大きく見せるストーリー型UI。左に写真、右にテキストと数字。 */
 export function CommunityStory({ activities }: { activities: CommunityActivity[] }) {
+  // 写真が登録されている項目だけをスライドにする（空枠・プレースホルダーは作らない）。
+  const slides = activities.filter((activity) => activity.imageSrc);
   const [active, setActive] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
   // 手動操作の直後は自動再生を一時停止し、AUTO_PLAY_INTERVAL_MS後に再開する。
@@ -51,8 +53,8 @@ export function CommunityStory({ activities }: { activities: CommunityActivity[]
   });
   const parallaxY = useTransform(scrollYProgress, [0, 1], reduceMotion ? ["0%", "0%"] : ["-6%", "6%"]);
 
-  const activity = activities[active];
-  const total = activities.length;
+  const total = slides.length;
+  const activity = slides[active];
 
   // 手動操作（ボタン／ドット）の後は自動再生を一時停止し、一定時間後に再開する。
   function pauseAutoPlayThenResume() {
@@ -87,6 +89,8 @@ export function CommunityStory({ activities }: { activities: CommunityActivity[]
     };
   }, []);
 
+  if (!activity) return null;
+
   return (
     <div onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>
       {/* 上部：タイトルと説明文。下部に横長の大きな写真を置く縦構成。 */}
@@ -110,6 +114,12 @@ export function CommunityStory({ activities }: { activities: CommunityActivity[]
               <p className="jp-pretty mt-5 text-sm leading-loose text-[var(--color-ink-700)] md:text-base">
                 {activity.description}
               </p>
+              {activity.areas && activity.areas.length > 0 && (
+                <p className="mt-5 text-sm text-[var(--color-ink-700)]">
+                  <span className="text-[var(--color-ink-500)]">連携地域：</span>
+                  {activity.areas.join("／")}
+                </p>
+              )}
               {activity.stat && <StatDisplay stat={activity.stat} active />}
               {activity.link && (
                 <a
@@ -123,28 +133,14 @@ export function CommunityStory({ activities }: { activities: CommunityActivity[]
           </AnimatePresence>
         </div>
 
-        <div className="flex shrink-0 items-center gap-2">
-          <button
-            type="button"
-            aria-label="前の活動を表示"
-            onClick={() => go(-1)}
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--color-paper-200)] text-lg text-[var(--color-ink-700)] transition-colors hover:border-[var(--color-accent-600)] hover:text-[var(--color-accent-600)]"
-          >
-            ‹
-          </button>
-          <button
-            type="button"
-            aria-label="次の活動を表示"
-            onClick={() => go(1)}
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--color-paper-200)] text-lg text-[var(--color-ink-700)] transition-colors hover:border-[var(--color-accent-600)] hover:text-[var(--color-accent-600)]"
-          >
-            ›
-          </button>
-        </div>
       </div>
 
       {/* 下部：横幅いっぱいの横長写真 */}
-      <div ref={photoRef} className="relative mt-10 aspect-[4/3] overflow-hidden md:mt-14 md:aspect-[16/10]">
+      {/* 写真はタイトル・説明文とのバランスを取り、幅を少し抑えて配置する。 */}
+      <div
+        ref={photoRef}
+        className="relative mt-10 aspect-[4/3] overflow-hidden md:mt-12 md:ml-auto md:aspect-[16/9] md:w-[86%]"
+      >
         <AnimatePresence>
           <motion.div
             key={activity.id}
@@ -163,6 +159,24 @@ export function CommunityStory({ activities }: { activities: CommunityActivity[]
             />
           </motion.div>
         </AnimatePresence>
+
+        {/* 送りボタンは写真の左右中央に重ねる。写真の上でも見失わないよう白の半透明を敷く。 */}
+        <button
+          type="button"
+          aria-label="前の活動を表示"
+          onClick={() => go(-1)}
+          className="absolute top-1/2 left-2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-[var(--color-paper-200)] bg-[var(--color-paper-050)]/85 text-xl text-[var(--color-ink-900)] backdrop-blur-sm transition-colors hover:bg-[var(--color-paper-050)] hover:text-[var(--color-accent-600)] md:left-4 md:h-12 md:w-12"
+        >
+          ‹
+        </button>
+        <button
+          type="button"
+          aria-label="次の活動を表示"
+          onClick={() => go(1)}
+          className="absolute top-1/2 right-2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-[var(--color-paper-200)] bg-[var(--color-paper-050)]/85 text-xl text-[var(--color-ink-900)] backdrop-blur-sm transition-colors hover:bg-[var(--color-paper-050)] hover:text-[var(--color-accent-600)] md:right-4 md:h-12 md:w-12"
+        >
+          ›
+        </button>
       </div>
 
       <div className="mt-6 flex items-center gap-2">

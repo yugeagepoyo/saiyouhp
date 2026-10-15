@@ -14,7 +14,8 @@ export type NavIconName =
   | "workplace"
   | "growth"
   | "community"
-  | "benefits";
+  | "benefits"
+  | "contact";
 
 export interface NavItem {
   label: string;
@@ -44,8 +45,8 @@ export const navItems: NavItem[] = [
     href: "/people",
     icon: "people",
     children: [
-      { label: "社員インタビュー", href: "/people#interview", icon: "interview" },
-      { label: "社長・部長メッセージ", href: "/people#message", icon: "message" },
+      { label: "代表メッセージ", href: "/people#message", icon: "message" },
+      { label: "従業員インタビュー", href: "/people#interview", icon: "interview" },
     ],
   },
   {
@@ -58,6 +59,7 @@ export const navItems: NavItem[] = [
     ],
   },
   { label: "FAQ", href: "/faq", icon: "faq" },
+  { label: "お問い合わせ", href: "/contact", icon: "contact" },
 ];
 
 export const CORPORATE_SITE_URL = "https://norbdence.co.jp/";

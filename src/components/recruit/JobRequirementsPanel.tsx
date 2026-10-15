@@ -17,8 +17,6 @@ import type { Job, JobVariant } from "@/data/jobs";
 
 const LABEL_WIDTH = "md:grid-cols-[11rem_1fr]";
 
-/** 「想定年収：5,000,000円〜」のような行は、金額だけを大きく赤で見せる */
-const HIGHLIGHT_PATTERN = /^(想定年収|月給)[:：](.+)$/;
 
 function Row({
   label,
@@ -47,24 +45,11 @@ function Row({
 function Lines({ items }: { items: string[] }) {
   return (
     <div className="space-y-1.5">
-      {items.map((item) => {
-        const match = HIGHLIGHT_PATTERN.exec(item);
-        if (match) {
-          return (
-            <p key={item} className="text-sm text-[var(--color-ink-900)]">
-              <span className="text-[var(--color-ink-700)]">{match[1]}</span>
-              <span className="font-display ml-2 text-xl font-semibold text-[var(--color-accent-600)] sm:text-2xl md:text-3xl">
-                {match[2]}
-              </span>
-            </p>
-          );
-        }
-        return (
-          <p key={item} className="text-sm leading-relaxed text-[var(--color-ink-900)]">
-            {item}
-          </p>
-        );
-      })}
+      {items.map((item) => (
+        <p key={item} className="text-sm leading-relaxed text-[var(--color-ink-900)]">
+          {item}
+        </p>
+      ))}
     </div>
   );
 }
@@ -73,14 +58,24 @@ function SalaryRows({ variant, commonNotes }: { variant: JobVariant; commonNotes
   const extraNotes = [...variant.salaryNotes, ...(commonNotes ?? [])];
   return (
     <>
+      {variant.incomeExamples && variant.incomeExamples.length > 0 && (
+        <Row label="年収実績モデル">
+          <div className="space-y-1.5">
+            {variant.incomeExamples.map((ex) => (
+              <p key={ex.label} className="text-sm leading-relaxed text-[var(--color-ink-900)]">
+                <span className="text-[var(--color-ink-700)]">{ex.label}</span>
+                <span className="ml-3">{ex.value}</span>
+              </p>
+            ))}
+          </div>
+        </Row>
+      )}
       {variant.salary.map((item, i) => {
         const isLast = i === variant.salary.length - 1;
         return (
           <Row key={item.label} label={item.label}>
             {item.note && <p className="text-sm text-[var(--color-ink-700)]">{item.note}</p>}
-            <p className="font-display text-xl leading-tight font-semibold text-[var(--color-accent-600)] sm:text-2xl md:text-3xl">
-              {item.value}
-            </p>
+            <p className="text-sm leading-relaxed text-[var(--color-ink-900)]">{item.value}</p>
             {(item.notes ?? []).map((note) => (
               <p key={note} className="mt-1.5 text-sm leading-relaxed text-[var(--color-ink-700)]">
                 {note}
@@ -113,7 +108,8 @@ export function JobRequirementsSections({ job }: { job: Job }) {
       {/* 書類のインデックスのように、パネルの上辺へタブを差し込む */}
       {hasVariants && (
         <div role="tablist" aria-label="経験区分" className="flex items-end gap-1.5">
-          {variants.map((v) => {
+          {/* 表示順は「経験者（左）／未経験者（右）」。データの並びは変えない。 */}
+          {[...variants].reverse().map((v) => {
             const isActive = v.id === active?.id;
             return (
               <button
@@ -249,7 +245,7 @@ function TraitList({ items, className = "" }: { items: string[]; className?: str
         >
           <span
             aria-hidden
-            className="mt-[0.3rem] flex h-[1.05rem] w-[1.05rem] shrink-0 items-center justify-center bg-[var(--color-ink-900)]"
+            className="mt-[0.3rem] flex h-[1.05rem] w-[1.05rem] shrink-0 items-center justify-center border border-[var(--color-ink-900)] bg-[var(--color-paper-050)]"
           >
             <svg viewBox="0 0 12 12" className="h-2.5 w-2.5" aria-hidden>
               <path

@@ -19,6 +19,8 @@ export interface CommunityActivity {
   description: string;
   stat?: CommunityStat;
   link?: { href: string; label: string };
+  /** 連携している地域（市区名など） */
+  areas?: string[];
   imageLabel: string;
   imageSrc?: string;
   /** 横長表示で重要部分が切れないよう調整する表示位置（CSS object-position） */
@@ -36,8 +38,9 @@ export const communityActivities: CommunityActivity[] = [
   },
   {
     id: "sports",
-    title: "スポーツ支援",
-    description: "地域のスポーツ団体・大会を支援し、子どもたちが安心して打ち込める環境づくりに協力しています。",
+    title: "兵庫県 企業版ふるさと納税",
+    description:
+      "兵庫県の地域活性化プロジェクトへの寄附を通じて、子どもたちがプロスポーツに触れる機会の創出を支援しています。",
     imageLabel: "スポーツ支援写真",
     imageSrc: "/images/community/sports.jpg",
   },
@@ -50,15 +53,9 @@ export const communityActivities: CommunityActivity[] = [
   },
   {
     id: "facility",
-    title: "地域施設との連携",
+    title: "福島区民センター ネーミングライツ取得",
     description: "地域の施設・団体と連携し、不動産・建設の知見を活かした協力を行っています。",
     imageLabel: "地域施設との連携写真",
     imageSrc: "/images/community/facility.jpg",
-  },
-  {
-    id: "other",
-    title: "その他社会貢献活動",
-    description: "本業である不動産・建設・解体産廃の知見を通じて、社会に貢献できる取り組みを模索しています。",
-    imageLabel: "社会貢献活動写真（仮）",
   },
 ];

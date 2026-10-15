@@ -12,7 +12,8 @@ import { SectionDecor } from "@/components/ui/SectionDecor";
  * TOPは流れる人物紹介、「人を知る」ページは部署別の一覧、と役割を分けている。
  */
 export function PeoplePickup() {
-  const employees = people.filter((person) => !person.isLeadership);
+  // 実データのある社員のみを並べる（レイアウト確認用のサンプルは出さない）。
+  const employees = people.filter((person) => !person.isLeadership && !person.isSample);
 
   return (
     <section className="section-blend blend-paper-000 relative overflow-hidden py-24 md:py-40">

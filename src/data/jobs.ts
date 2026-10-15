@@ -33,8 +33,13 @@ export interface IncomeModelStep {
 export interface JobVariant {
   id: string;
   label: string;
-  /** 大きく見せる給与の要点。notes はその項目に付く補足。 */
+  /** 給与の要点。notes はその項目に付く補足。 */
   salary: { label: string; value: string; note?: string; notes?: string[] }[];
+  /**
+   * 年収実績モデル（Aさん・Bさん…）。数値は確認中のため、
+   * この配列を書き換えるだけで表示を更新できるようにしている。
+   */
+  incomeExamples?: { label: string; value: string }[];
   /** どの項目にも紐づかない給与の補足 */
   salaryNotes: string[];
   idealCandidateLead?: string;
@@ -129,10 +134,10 @@ export const jobs: Job[] = [
     category: "mid-career",
     jobGroup: "general",
     employmentType: "正社員",
-    location: "本社（詳細住所は共有後に反映）",
+    location: "大阪本社",
     summary:
       "不動産・建設・解体産廃、複数事業と連携しながら成長できる営業職です。未経験からでも挑戦でき、業界での営業経験を活かして活躍いただくこともできます。",
-    salaryRange: "想定年収：3,600,000円〜7,800,000円（最低保証）＋営業成績によるインセンティブ",
+    salaryRange: "年収実績モデル：300万円／360万円／480万円（＋営業成績によるインセンティブ）",
     departmentId: "sales",
     published: true,
     workDetails:
@@ -151,13 +156,13 @@ export const jobs: Job[] = [
       {
         id: "inexperienced",
         label: "未経験者",
+        // 金額は最終確認中。この配列を書き換えるだけで表示が更新される。
+        incomeExamples: [
+          { label: "Aさん", value: "300万円＋インセンティブ" },
+          { label: "Bさん", value: "360万円＋インセンティブ" },
+          { label: "Cさん", value: "480万円＋インセンティブ" },
+        ],
         salary: [
-          {
-            label: "想定年収",
-            value: "3,600,000円〜7,800,000円",
-            note: "最低保証",
-            notes: ["別途、営業成績によるインセンティブ有り"],
-          },
           {
             label: "月給",
             value: "250,000円〜650,000円",
@@ -187,18 +192,9 @@ export const jobs: Job[] = [
         label: "経験者",
         salary: [
           {
-            label: "想定年収",
-            value: "3,600,000円〜7,800,000円",
-            note: "最低保証",
-            notes: ["＋営業成績によるインセンティブ"],
-          },
-          {
+            // 金額は未確定のため推測せず ASK と表示する。
             label: "月給",
-            value: "300,000円〜650,000円",
-            notes: [
-              "固定残業手当：76,900円〜166,600円を上記給与に含む",
-              "固定残業時間超過の場合は別途支給",
-            ],
+            value: "ASK",
           },
         ],
         salaryNotes: [],
@@ -258,7 +254,7 @@ export const jobs: Job[] = [
     category: "mid-career",
     jobGroup: "general",
     employmentType: "正社員",
-    location: "本社（詳細住所は共有後に反映）",
+    location: "大阪本社",
     summary: "確かな技術と品質管理で、物件の価値をかたちにする施工管理のポジションです。",
     salaryRange: "想定年収：5,000,000円〜",
     departmentId: "construction",
@@ -357,7 +353,7 @@ export const jobs: Job[] = [
     category: "mid-career",
     jobGroup: "general",
     employmentType: "正社員",
-    location: "本社（詳細住所は共有後に反映）",
+    location: "大阪本社",
     summary: "安全第一で解体工事・産業廃棄物処理を担うポジションです。",
     salaryRange: "想定年収：応相談（確定次第更新）",
     departmentId: "demolition",
@@ -383,12 +379,97 @@ export const jobs: Job[] = [
     },
   },
   {
+    // 新卒採用の営業職。共有いただいた条件のみを掲載する。
+    slug: "new-grad-sales",
+    title: "営業職",
+    category: "new-grad",
+    jobGroup: "general",
+    employmentType: "正社員",
+    location: "大阪本社",
+    summary:
+      "不動産売買・買取再販を中心に、解体工事やリフォームの提案、法人営業など幅広い営業活動を担当します。お客様のニーズを把握し、提案から契約・引渡しまで一貫して携わります。",
+    salaryRange: "1年目年収：500万円",
+    departmentId: "sales",
+    published: true,
+    workDetails:
+      "不動産売買・買取再販を中心に、解体工事やリフォームの提案、法人営業など幅広い営業活動を担当します。お客様のニーズを把握し、提案から契約・引渡しまで一貫して携わります。",
+    requiredExperience: "不問（新卒採用）",
+    requiredQualifications:
+      "必須：普通自動車運転免許／歓迎：宅地建物取引士（宅建士）資格保有者",
+    educationRequirement: "大卒以上",
+    requirements: {
+      employmentType: "正社員",
+      workLocation: "大阪本社：大阪市北区豊崎三丁目20番10号（転勤無し）",
+      smokingMeasures: "屋内禁煙（喫煙室設置予定）",
+      jobDescription:
+        "不動産売買・買取再販を中心に、解体工事やリフォームの提案、法人営業など幅広い営業活動",
+      applicationRequirements:
+        "大卒以上／必須：普通自動車運転免許／歓迎：宅地建物取引士（宅建士）資格保有者",
+      selectionFlow: SELECTION_FLOW,
+    },
+    conditions: [
+      {
+        label: "給与",
+        items: [
+          "1年目年収：500万円",
+          "月給：300,000円",
+          "基本給：223,100円",
+          "固定残業代：76,900円",
+          "超過分は別途支給",
+        ],
+      },
+      {
+        label: "賞与",
+        items: [
+          "1年目：1,400,000円（3月末に1回支給）",
+          "2年目以降：歩合規定に準ずる／賞与年2回（6月・12月）",
+        ],
+      },
+      { label: "宅建手当", items: ["別途20,000円"] },
+      { label: "昇給", items: ["年1回（4月）"] },
+      { label: "通勤手当", items: ["月額30,000円まで"] },
+      {
+        label: "労働時間",
+        items: [
+          "平日（月曜日〜金曜日）：9:00〜18:00（8時間／日）",
+          "休日出勤した場合は平日に代休取得可能",
+          "平均残業時間：20〜30時間／月",
+          "休憩時間：60分",
+        ],
+      },
+      {
+        label: "休日",
+        items: [
+          "完全週休2日（土日祝、社内カレンダーに基づく）",
+          "年間休日125日＋有給休暇計画付与3日（実質年間128日）",
+        ],
+      },
+      {
+        label: "休暇",
+        items: [
+          "年末年始",
+          "GW",
+          "夏季休暇",
+          "冬季休暇",
+          "年次有給休暇",
+          "慶弔休暇",
+          "産前産後休暇",
+          "育児休暇",
+          "介護休暇",
+          "子の看護休暇",
+          "不妊治療休暇",
+        ],
+      },
+      { label: "保険", items: ["雇用保険", "健康保険", "厚生年金", "労災保険"] },
+    ],
+  },
+  {
     slug: "administration",
     title: "事務職",
     category: "mid-career",
     jobGroup: "office",
     employmentType: "正社員",
-    location: "本社（詳細住所は共有後に反映）",
+    location: "大阪本社",
     summary: "各事業を裏方から支え、円滑な業務進行を支える事務ポジションです。",
     salaryRange: "想定年収：2,928,000円〜",
     departmentId: "admin",
@@ -464,7 +545,7 @@ export const jobs: Job[] = [
     category: "new-grad",
     jobGroup: "general",
     employmentType: "正社員",
-    location: "本社（詳細住所は共有後に反映）",
+    location: "大阪本社",
     summary: "複数事業を横断的に経験しながらキャリアを築くポジションです。",
     salaryRange: "初任給例：応相談（実データ反映待ち）",
     departmentId: "admin",

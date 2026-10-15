@@ -187,9 +187,25 @@ export const people: Person[] = [
     departmentId: "construction",
     unit: "建設事業部",
     role: "",
-    joinYear: "2023年",
+    joinYear: "2024年",
     quote: "",
-    interviewPending: true,
+    photoSrc: "/images/people/ozoe-yua.jpg",
+    photoPosition: "center 35%",
+    beforeAfterText:
+      "保育士から全く異なる建設業界へ転職し、最初は分からないことばかりでしたが、日々新しい知識や経験が増え、自分自身の成長を感じています。\n\nリフォーム工事に関する各種申請や近隣挨拶、業務効率化に向けた取り組みなど、幅広い仕事に挑戦できるようになりました。",
+    previousCareer: "保育士として働いていました。",
+    howFoundCompany: "求人サイトのIndeedでノーブデンスを知りました。",
+    reasonForJoining: "髪色やネイルが自由で、自分らしく働ける環境に魅力を感じました。",
+    concernBeforeJoining:
+      "建設業界の知識が全くなかったため、仕事を覚えられるか不安でした。また、保育士から初めてのオフィスワークへの転職だったので、環境に馴染めるか心配でした。",
+    impressionChange:
+      "入社前はデスクワークが中心だと思っていましたが、実際には近隣挨拶や申請業務などで外出する機会もあり、想像していた以上に幅広い仕事に携われることが新鮮でした！\n車での移動がちょっとしたリフレッシュにもなっています！",
+    currentWork:
+      "建設事業部で、主にリフォーム工事に関する見積書や各種書類の作成、工事に必要な申請手続き、近隣住民の方へのご挨拶などを担当しています。\n\nまた、社内業務をより効率的に進められるよう、見積もりサイトの開発などにも取り組んでいます。\n\n事務作業だけでなく、工事がスムーズに進むようにさまざまな面からサポートする仕事をしています。",
+    rewardingMoment:
+      "最初は分からなかったことが少しずつ理解できるようになり、自分一人で対応できる仕事が増えたときに成長を感じます。\n\nまた、申請手続きや近隣対応など、自分が担当した業務が無事に完了し、工事を円滑に進めるための力になれたときにもやりがいを感じます。\n\n周りの方から仕事を任せてもらえたり、頼ってもらえたりすることも嬉しいです！",
+    futureChallenge:
+      "リフォームや建設業界に関する知識をさらに深め、今まで以上に幅広い業務に対応できるようになりたいです。\n\nまた、日々の業務の中で改善できることを自分から見つけ、業務効率化にも積極的に取り組んでいきたいと考えています。\n\n一つひとつの仕事の精度を高めながら、周りの方から安心して仕事を任せてもらえる存在を目指していきたいです！",
   },
   {
     slug: "sumizawa-tetsuya",
@@ -199,20 +215,37 @@ export const people: Person[] = [
     departmentId: "demolition",
     unit: "解体施工部",
     role: "",
-    joinYear: "2024年",
+    joinYear: "2025年",
     quote: "",
-    interviewPending: true,
+    photoSrc: "/images/people/sumizawa-tetsuya.jpg",
+    beforeAfterText:
+      "入社前はのんびり個人事業主として働いてましたが、ノーブデンスに入社して忙しいけど仕事が楽しく充実してると心から思えました。",
+    previousCareer: "パーソナルトレーナー、スポーツインストラクター、生命保険営業",
+    howFoundCompany: "大塚、立石、畑野から話を聞きました。\n彼らは高校、地元の友達でした。",
+    reasonForJoining: "大塚、立石、畑野が働いてる会社だから",
+    concernBeforeJoining:
+      "未経験で営業ができるのか。会社員という形態で仕事をするのが初めてに近かったのでついていけるか不安でした。",
+    impressionChange:
+      "ガチガチの精鋭集団でとっつきにくいイメージがありましたが、実際にはコミュニケーションも積極的に取っていただきスムーズに溶け込むことができる環境でした。",
+    currentWork: "解体施工部の営業兼施工管理兼作業員です。",
+    rewardingMoment:
+      "仕事ぶりを評価していただき継続して案件を頂けること。無事に現場が終わったとき。トラブルがあっても早急に対応できて最小限の被害に抑えられた時。",
+    futureChallenge:
+      "解体施工部をさらに拡大するために、現在の案件の倍の仕事をもらえるようにする。\nまたその案件をこなすための体制整備。",
   },
   {
     // 本文はすべて共有いただいた原文のまま（要約・言い換えはしない）。
-    // 英字表記は未指定のため設定しない。写真も未指定。
     slug: "ishigaki-misaki",
     name: "石垣 岬",
+    kana: "イシガキ ミサキ",
+    nameEn: "Ishigaki Misaki",
     departmentId: "admin",
     unit: "管理部",
     role: "",
     joinYear: "2024年",
     quote: "",
+    // 元写真が寄り気味のため、左右に余白を足して4:5にした画像を使用している。
+    photoSrc: "/images/people/ishigaki-misaki.jpg",
     beforeAfterText:
       "ただ間取りや賃貸サイトを見るのが好きという理由から未経験の不動産会社で働くことになり、最初はとても不安でした。\n\n入社後は総務ですが、幅広い業務にかかわり事務スキルだけでなく、マルチタスクに対応する力も身につきました。",
     previousCareer:
@@ -274,12 +307,23 @@ export const people: Person[] = [
     unit: "第二営業部",
     position: "主任",
     role: "第二営業部 主任",
-    joinYear: "",
     quote: "",
+    joinYear: "2024年",
     photoSrc: "/images/people/nagato-ryosei.jpg",
     // 縦位置の写真のため、頭が切れないよう上寄りで切り抜く。
     photoPosition: "center 25%",
-    interviewPending: true,
+    beforeAfterText:
+      "入社前：やる気はあるものの歩合も少なく未来への不安はありました。\n入社後：より一層仕事へのモチベーションも上がりかなり生活に余裕ができました！",
+    previousCareer: "エンド向けの不動産営業",
+    howFoundCompany: "知人の紹介",
+    reasonForJoining: "今の上席みたいになりたい！人間性に憧れを抱きました！",
+    concernBeforeJoining:
+      "結果が出せるかの不安はありました、ですが自分ならいける！と根拠なき自信はありました。笑",
+    impressionChange: "ON、OFFがしっかりされているもののかなり働きやすい、学びがある環境",
+    currentWork: "営業全般",
+    rewardingMoment:
+      "数字がしっかりとお給料に反映される、成約をあげた時、自分含め大切な人が喜んでくれたり幸せにできた時",
+    futureChallenge: "もっともっと貪欲に泥臭く稼ぎまくること",
   },
   {
     slug: "sample-sales-01",
@@ -373,6 +417,8 @@ export const people: Person[] = [
     role: "",
     joinYear: "2024年",
     quote: "",
+    photoSrc: "/images/people/yuasa-rina.jpg",
+    photoPosition: "center 35%",
     beforeAfterText:
       "入社前は、まさか自分が不動産の財務・経理に携わるとは思っていませんでした。入社後は、数字を扱うだけでなく、資金繰りや融資など経営に近い仕事にも関わるようになり、視野が広がりました。今は、どうすれば会社に貢献できるかを考えながら仕事をするようになったと思います。",
     previousCareer:

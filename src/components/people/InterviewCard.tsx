@@ -37,7 +37,7 @@ export function InterviewCard({
   return (
     <Link
       href={`/people/${person.slug}`}
-      className="group block"
+      className="group @container block"
       tabIndex={clone ? -1 : undefined}
       draggable={false}
     >
@@ -87,7 +87,8 @@ export function InterviewCard({
           {person.name}
         </p>
         {/* 英字表記はデザイン要素として大きく。読みが未共有の方は空欄。 */}
-        <p className="font-heading-en mt-3 text-[clamp(1.75rem,3vw,2.75rem)] leading-[1.05] font-semibold tracking-[0.02em] text-[var(--color-ink-900)]/20 uppercase">
+        {/* 名前が長くても折り返さないよう、カード幅に合わせて文字サイズを決める（カードの高さを全員そろえるため）。 */}
+        <p className="font-heading-en mt-3 text-[clamp(1.1rem,8.2cqw,2.75rem)] leading-[1.05] font-semibold tracking-[0.02em] whitespace-nowrap text-[var(--color-ink-900)]/20 uppercase">
           {person.nameEn ?? ""}
         </p>
         {showLinkText && (

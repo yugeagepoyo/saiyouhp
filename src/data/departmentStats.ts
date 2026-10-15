@@ -45,14 +45,6 @@ export const salesStats: DepartmentStat[] = [
     note: "毎年実施",
   },
   {
-    id: "sales-max-income",
-    label: "最高年収例",
-    status: "unconfirmed",
-    placeholderValue: 99,
-    unit: "万円",
-    pendingNote: "1,500万円と共有いただいたが「?」付きのため、正式な数値として確認予定",
-  },
-  {
     id: "sales-promotion-speed",
     label: "昇進スピード",
     status: "unconfirmed",

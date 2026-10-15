@@ -2,17 +2,12 @@ import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
-import { RevealImage } from "@/components/ui/RevealImage";
 import { jobs } from "@/data/jobs";
 import { SectionDecor } from "@/components/ui/SectionDecor";
 
 const PICKUP_COUNT = 4;
 
-/**
- * RECRUIT：募集情報・採用メッセージ・ENTRY導線。
- * ビジュアル領域は RevealImage のプレースホルダーで確保しており、
- * 写真が確定したら src を渡すだけで差し替えられる。
- */
+/** RECRUIT：募集情報・採用メッセージ・ENTRY導線。文字情報だけで構成する。 */
 export function RecruitingInformation() {
   const pickups = jobs.filter((job) => job.published).slice(0, PICKUP_COUNT);
 
@@ -22,16 +17,7 @@ export function RecruitingInformation() {
       <Container className="relative">
         <SectionHeading eyebrow="Recruit" title="採用情報" align="center" />
 
-        <div className="mx-auto mt-12 max-w-4xl">
-          <RevealImage
-            alt="ノーブデンスで働く社員"
-            label="採用イメージ（仮）"
-            aspectClassName="aspect-[16/9]"
-            parallax
-          />
-        </div>
-
-        <p className="font-serif-jp mx-auto mt-12 max-w-2xl text-center text-2xl leading-relaxed font-bold text-[var(--color-ink-900)] md:text-3xl md:leading-relaxed">
+        <p className="font-serif-jp mx-auto mt-14 max-w-2xl text-center text-2xl leading-relaxed font-bold text-[var(--color-ink-900)] md:text-3xl md:leading-relaxed">
           一緒に未来を創る仲間へ
         </p>
 
@@ -43,7 +29,11 @@ export function RecruitingInformation() {
               className="group flex items-center justify-between gap-3 rounded-2xl border border-[var(--color-paper-200)] bg-[var(--color-paper-050)] px-5 py-4 transition-colors hover:border-[var(--color-accent-500)]"
             >
               <span>
-                <span className="block text-sm font-medium text-[var(--color-ink-900)] group-hover:text-[var(--color-accent-600)]">
+                {/* 中途／新卒が一目で分かるよう、職種名の上に小さく出す。 */}
+                <span className="block text-[11px] font-bold tracking-[0.12em] text-[var(--color-accent-600)]">
+                  {job.category === "new-grad" ? "新卒" : "中途"}
+                </span>
+                <span className="mt-1 block text-sm font-medium text-[var(--color-ink-900)] group-hover:text-[var(--color-accent-600)]">
                   {job.title}
                 </span>
                 <span className="mt-0.5 block text-xs text-[var(--color-ink-500)]">

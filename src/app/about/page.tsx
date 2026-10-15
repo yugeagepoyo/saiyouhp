@@ -109,8 +109,13 @@ export default function AboutPage() {
           <div className="mt-20 md:mt-28">
             <SectionHeading eyebrow="Office" title="オフィス紹介" align="center" />
             <p className="mx-auto mt-6 max-w-2xl text-center text-sm leading-relaxed text-[var(--color-ink-700)] md:text-base">
-              本社オフィスは、部署を越えたコミュニケーションが自然に生まれるレイアウトを意識しています。
-              若手からベテランまで、フラットに意見を交わせる雰囲気づくりを大切にしています。
+              {/* 前の文の続きが次の文に食い込んで「雰囲気づくりを」だけが行末に残らないよう、1文ずつ行を分ける。 */}
+              <span className="jp-balance block">
+                本社オフィスは、部署を越えたコミュニケーションが自然に生まれるレイアウトを意識しています。
+              </span>
+              <span className="jp-pretty block">
+                若手からベテランまで、フラットに意見を交わせる雰囲気づくりを大切にしています。
+              </span>
             </p>
             <OfficeShowcase offices={offices} />
           </div>
